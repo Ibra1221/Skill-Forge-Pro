@@ -4,10 +4,23 @@
  */
 package Backend.Services;
 
+import Backend.Database.CourseDatabase;
+
 /**
  *
  * @author pola-nasser13
  */
 public class InstructorService {
+    
+    CourseDatabase courses;
+    
+    InstructorService(){
+                courses = new CourseDatabase("courses.json");
+                courses.readFromFile();
+    }
+    
+    void createCourse(){
+        
+    }
     
 }
