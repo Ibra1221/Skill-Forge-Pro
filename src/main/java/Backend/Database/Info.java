@@ -4,9 +4,12 @@
  */
 package Backend.Database;
 
+import org.json.JSONObject;
+
 /**
  *
  * @author pola-nasser13
  */
 public interface Info {
+    JSONObject toJSON();     
 }
