@@ -12,7 +12,7 @@ import org.json.JSONObject;
  *
  * @author Pc
  */
-public class Courses {
+public class Course {
 
     private int courseId;
     private String title;
@@ -21,7 +21,7 @@ public class Courses {
     private ArrayList<Lesson> lessons;
     private ArrayList<Student> students;
     
-    public Courses(int courseId, String title, String description, int instructorId){
+    public Course(int courseId, String title, String description, int instructorId){
     setTitle(title);
     setCourseId(courseId);
     setDescription(description);
@@ -29,7 +29,7 @@ public class Courses {
     this.lessons= new ArrayList<>();
     this.students= new ArrayList<>();
     }
-    public Courses(JSONObject json){
+    public Course(JSONObject json){
     this.courseId=json.getInt("courseId");
     this.title=json.getString("title");
     this.description=json.getString("description");
@@ -64,13 +64,24 @@ public class Courses {
     public void setInstructorId(int instructorId){
     this.instructorId=instructorId;
     }
-    public void addLesson(Lesson lesson){
-    lessons.add(lesson);
-    
+    public boolean addLesson(Lesson lesson){
+    if(lessons.contains(lesson)){
+        return false;
+    }
+    else{
+        lessons.add(lesson);
+        return true;
+    }
     
     }
-    public void removeLesson(Lesson lesson){
+    public boolean removeLesson(Lesson lesson){
+        if(lessons.contains(lesson)){
         lessons.remove(lesson);
+        return true;
+        }
+        else{
+            return false;
+        }
     }
     public void enrollStudent(Student student){
     boolean found=false;
@@ -125,4 +136,3 @@ public class Courses {
     public ArrayList<Student>getStudents() { 
     return students; }
 }
-
