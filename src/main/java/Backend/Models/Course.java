@@ -54,7 +54,16 @@ public class Course {
     
     }
     public void setCourseId(int courseId){
-    this.courseId=courseId;
+   if(courseId<0){
+            throw new IllegalArgumentException("cousreId can not be negative.");
+        }
+        if(courseId==0){
+            throw new IllegalArgumentException("courseId must be greater than zero.");
+        }
+        if(courseId>14){
+            throw new IllegalArgumentException("courseId must not be greater than 14.");
+        }
+        this.courseId=courseId;
     
     }
     public void setDescription(String description){
@@ -62,7 +71,16 @@ public class Course {
     
     }
     public void setInstructorId(int instructorId){
-    this.instructorId=instructorId;
+    if(instructorId<0){
+            throw new IllegalArgumentException("instructorId can not be negative.");
+        }
+        if(instructorId==0){
+            throw new IllegalArgumentException("instructorId must be greater than zero.");
+        }
+        if(instructorId>14){
+            throw new IllegalArgumentException("instructorId must not be greater than 14.");
+        }
+        this.instructorId=instructorId;
     }
     public boolean addLesson(Lesson lesson){
     if(lessons.contains(lesson)){
