@@ -73,6 +73,13 @@ public class StudentService {
         return c;
     }
     
+    public boolean isLessonCompleted(Lesson l, Course c){
+        if(getLessons(c).contains(l)){
+            return true;
+        }
+        return false;
+    }
+    
     public void logout(){
         save();
 }

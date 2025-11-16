@@ -93,6 +93,16 @@ public class Course implements Info {
         }
         return false;
     }
+    
+    public Lesson getLessonById(int lessonId) {
+        for (int i = 0; i < lessons.size(); i++) {
+            if (lessons.get(i).getLessonId() == lessonId) {
+                return lessons.get(i);
+                
+            }
+        }
+        return null;
+    }
 
     public boolean enrollStudentById(int studentId) {
         for (int i = 0; i < studentIds.size(); i++) {

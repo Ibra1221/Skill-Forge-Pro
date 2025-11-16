@@ -98,4 +98,17 @@ public class Lesson implements Info {
     public void setContent(String content) {
         this.content = content;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Lesson)) return false;
+        Lesson other = (Lesson) obj;
+        return this.lessonId == other.lessonId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(lessonId);
+    }
 }

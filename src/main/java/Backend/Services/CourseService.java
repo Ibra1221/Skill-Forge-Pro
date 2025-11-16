@@ -8,6 +8,7 @@ import Backend.Database.InstructorDatabase;
 import Backend.Database.StudentDatabase;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
+import Backend.Models.Lesson;
 
 /**
  *
@@ -34,5 +35,16 @@ public class CourseService {
         }
         System.out.println("Couldn't fetch an instructor with that id!");
         return "";
+    }
+    
+    public Lesson getLessonById(int lessonId){
+        Lesson l = course.getLessonById(lessonId);
+        if(l == null){
+            System.out.println("Couldn't find lesson!");
+    }
+        else{
+            System.out.println("Successfully fetched lesson " + l.getTitle());
+        }
+        return l;
     }
 }

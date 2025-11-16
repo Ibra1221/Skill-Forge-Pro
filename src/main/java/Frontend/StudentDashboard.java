@@ -2,12 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.mycompany.user;
+package Frontend;
 
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import Backend.Models;
+import Backend.Models.Course;
+import Backend.Models.Lesson;
+import Backend.Models.Student;
+import Backend.Services.CourseService;
+import Backend.Services.StudentService;
 
 
 
@@ -16,11 +19,15 @@ import Backend.Models;
  * @author Mohamed Walaa
  */
 public class StudentDashboard extends javax.swing.JPanel {
-
+    
+    StudentService studentService;
+    
     /**
      * Creates new form StudentDashboard
+     * @param student
      */
-    public StudentDashboard() {
+    public StudentDashboard(Student student) {
+        studentService = new StudentService(student);
         initComponents();
     }
 
@@ -203,6 +210,46 @@ public class StudentDashboard extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void refreshTables() {
+   DefaultTableModel enrolledModel = (DefaultTableModel) enrolledCoursesTable.getModel();
+    DefaultTableModel lessonsModel = (DefaultTableModel) lessonTable.getModel();
+    enrolledModel.setRowCount(0);
+    for (Course c : studentService.getCourses()) {
+        CourseService courseService = new CourseService(c);
+        int total = c.getLessons().size();
+    int completed = studentService.getLessons(c).size();
+
+    enrolledModel.addRow(new Object[]{
+        c.getCourseId(),
+        c.getTitle(),
+        courseService.getInstructorName(),
+        completed + "/" + total   
+    });
+    }
+
+    int selectedRow = enrolledCoursesTable.getSelectedRow();
+    lessonsModel.setRowCount(0);
+
+    if (selectedRow != -1) {
+        int courseId = (int) enrolledModel.getValueAt(selectedRow, 0);
+        Course selectedCourse = studentService.getCourseById(courseId);  
+        if (selectedCourse != null) {
+            for (Lesson l : selectedCourse.getLessons()) {
+                boolean done = studentService.isLessonCompleted(l, selectedCourse);
+                String doneText = "No";
+                if(done){
+                    doneText = "Yes";
+                }
+                else {
+                    doneText = "No";
+                }
+                lessonsModel.addRow(new Object[]{ l.getLessonId(), l.getTitle(), doneText});
+            }
+        }
+    }
+}
+
+    
     private void accesslessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accesslessonsActionPerformed
                                             
     int selectedRow = enrolledCoursesTable.getSelectedRow();
@@ -214,7 +261,9 @@ public class StudentDashboard extends javax.swing.JPanel {
     int courseId = (Integer) enrolledCoursesTable.getValueAt(selectedRow, 0);
 
     Course selectedCourse = null;
-    for (Course c : student.getEnrolledCourses()) {
+    
+    
+    for (Course c : studentService.getCourses()) {
         if (c.getCourseId() == courseId) {
             selectedCourse = c;
             break;
@@ -230,10 +279,10 @@ public class StudentDashboard extends javax.swing.JPanel {
     lessonsModel.setRowCount(0);
 
     for (Lesson lesson : selectedCourse.getLessons()) {
-        boolean completed = student.getCompletedLessons(selectedCourse).contains(lesson.getLessonId());
-        lessonsModel.addRow(new Object[]{lesson.getLessonId(), lesson.getLessonName(), completed ? "Yes" : "No"});
+        boolean completed = studentService.getLessons(selectedCourse).contains(lesson);
+        lessonsModel.addRow(new Object[]{lesson.getLessonId(), lesson.getTitle(), completed ? "Yes" : "No"});
     }
-
+    refreshTables();
     }//GEN-LAST:event_accesslessonsActionPerformed
 
     
@@ -250,9 +299,9 @@ public class StudentDashboard extends javax.swing.JPanel {
     }
 
     int courseId = (Integer) availableCourseTable.getValueAt(selectedRow, 0);
-
+    
     Course selectedCourse = null;
-    for (Course c : createdCourses) {
+    for (Course c : studentService.getCourses()) {
         if (c.getCourseId() == courseId) {
             selectedCourse = c;
             break;
@@ -263,23 +312,26 @@ public class StudentDashboard extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "Selected course not found.");
         return;
     }
-
-    boolean enrolled = student.enrollCourse(selectedCourse);
+    
+    boolean enrolled = studentService.enrollInCourse(selectedCourse);
     if (enrolled) {
-        JOptionPane.showMessageDialog(this, "Enrolled in course: " + selectedCourse.getCourseName());
-
+        
+        JOptionPane.showMessageDialog(this, "Enrolled in course: " + selectedCourse.getTitle());
         DefaultTableModel enrolledModel = (DefaultTableModel) enrolledCoursesTable.getModel();
         enrolledModel.setRowCount(0);
-        for (Course c : student.getEnrolledCourses()) {
-            int completedLessons = student.getCompletedLessons(c).size();
+        for (Course c : studentService.getCourses()) {
+            CourseService coursesService = new CourseService(c);
+            int completedLessons = studentService.getLessons(c).size();
             enrolledModel.addRow(new Object[]{
                 c.getCourseId(),
-                c.getCourseName(),
-                c.getInstructorName(),
+                c.getTitle(),
+                coursesService.getInstructorName(),
                 c.getLessons().size(),
                 completedLessons + "/" + c.getLessons().size()
             });
+            
         }
+        refreshTables();
     } else
         JOptionPane.showMessageDialog(this, "Already enrolled in this course.");
     
@@ -304,7 +356,8 @@ public class StudentDashboard extends javax.swing.JPanel {
     int courseId = (Integer) enrolledCoursesTable.getValueAt(selectedCourseRow, 0);
 
     Course selectedCourse = null;
-    for (Course c : student.getEnrolledCourses()) {
+    for (int id : studentService.getEnrolledCourses()) {
+        Course c = studentService.getCourseById(id);
         if (c.getCourseId() == courseId) {
             selectedCourse = c;
             break;
@@ -312,17 +365,18 @@ public class StudentDashboard extends javax.swing.JPanel {
     }
 
     if (selectedCourse == null) return;
-
-    student.getCompletedLessons(selectedCourse).remove(Integer.valueOf(lessonId));
+    CourseService coursesService = new CourseService(selectedCourse);
+    Lesson lesson = coursesService.getLessonById(lessonId);
+    studentService.getLessons(selectedCourse).remove(lesson);
 
     DefaultTableModel lessonsModel = (DefaultTableModel) lessonTable.getModel();
     lessonsModel.setValueAt("No", selectedRow, 2);
 
     DefaultTableModel enrolledModel = (DefaultTableModel) enrolledCoursesTable.getModel();
-    int completedCount = student.getCompletedLessons(selectedCourse).size();
+    int completedCount = studentService.getLessons(selectedCourse).size();
     int totalLessons = selectedCourse.getLessons().size();
     enrolledModel.setValueAt(completedCount + "/" + totalLessons, selectedCourseRow, 4);
-
+    refreshTables();
     }//GEN-LAST:event_incompLessonButtonActionPerformed
 
     private void compLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compLessonButtonActionPerformed
@@ -344,7 +398,8 @@ public class StudentDashboard extends javax.swing.JPanel {
     int courseId = (Integer) enrolledCoursesTable.getValueAt(selectedCourseRow, 0);
 
     Course selectedCourse = null;
-    for (Course c : student.getEnrolledCourses()) {
+    for (int id : studentService.getEnrolledCourses()) {
+        Course c = studentService.getCourseById(id);
         if (c.getCourseId() == courseId) {
             selectedCourse = c;
             break;
@@ -352,16 +407,18 @@ public class StudentDashboard extends javax.swing.JPanel {
     }
 
     if (selectedCourse == null) return;
-
-    student.markLessonCompleted(selectedCourse, lessonId);
+    CourseService coursesService = new CourseService(selectedCourse);
+    Lesson lesson = coursesService.getLessonById(lessonId);
+    studentService.markLessonAsCompleted(selectedCourse, lesson);
 
     DefaultTableModel lessonsModel = (DefaultTableModel) lessonTable.getModel();
     lessonsModel.setValueAt("Yes", selectedRow, 2);
 
     DefaultTableModel enrolledModel = (DefaultTableModel) enrolledCoursesTable.getModel();
-    int completedCount = student.getCompletedLessons(selectedCourse).size();
+    int completedCount = studentService.getLessons(selectedCourse).size();
     int totalLessons = selectedCourse.getLessons().size();
     enrolledModel.setValueAt(completedCount + "/" + totalLessons, selectedCourseRow, 4);
+    refreshTables();
     }//GEN-LAST:event_compLessonButtonActionPerformed
 
 
