@@ -8,6 +8,6 @@ package Backend.Models;
  *
  * @author pola-nasser13
  */
-public class Instructor {
+public class Instructor extends User {
     
 }
