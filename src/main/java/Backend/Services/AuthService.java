@@ -42,17 +42,17 @@ public class AuthService {
        return user; 
     }
     
-   public boolean signup(String userId, String role, String username, String password, String id){
+   public boolean signup(int id, String role, String username,String email, String password){
          User user = null;
          boolean insertStatus = false;
         if(role.equals("Student")){
-             user = new Student(userId, role, username, password,id);
+             user = new Student(id,  username,email,  password);
              JSONObject JSONUser = user.toJSON();
              insertStatus = students.insertRecord(JSONUser);
             
         }
         else if(role.equals("Instructor")){
-            user = new Instructor(userId, role, username, password,id);
+            user = new Instructor(id, username,email, password);
             JSONObject JSONUser = user.toJSON();
             insertStatus = instructors.insertRecord(JSONUser);
         }

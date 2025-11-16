@@ -28,7 +28,7 @@ public class Student extends User {
         enrolledCourses.add(course);
         progress.put(course, new ArrayList<>());
 
-        course.enroll(this.getUserId());
+        course.enrollStudent(this);
 
         System.out.println("Student " + this.getUserId() + " successfully enrolled in Course " + course.getCourseId());
         return true;
@@ -68,8 +68,4 @@ public class Student extends User {
         return enrolledCourses;
     }
 
-    // for GUI
-    @Override
-    public void openDashboard(JFrame parentFrame) {
-    }
 }

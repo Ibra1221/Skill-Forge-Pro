@@ -51,7 +51,7 @@ public class Instructor extends User {
         JSONObject j = super.toJSON();
         JSONArray arr = new JSONArray();
         for (Course c : createdCourses) {
-            arr.put(c.toJSON()); // store full object
+            arr.put(c.toJson()); // store full object
         }
         j.put("createdCourses", arr);
         return j;

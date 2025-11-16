@@ -98,27 +98,7 @@ public class InstructorService {
    private void save(){
         courses.saveToFile();
         instructors.saveToFile();
-    }
-
-//   public boolean addResource(Lesson l, String resource){
-//       boolean addStatus = l.addResource(resource);
-//       if(addStatus){
-//           System.out.println("Resource added successfully!");
-//           return true;
-//       }
-//           System.out.println("Failed to add! Resource already added.");
-//          return false;
-//   }
-//
-//   public boolean removeResource(Lesson l, String resource){
-//       boolean removeStatus = l.removeResource(resource);
-//       if(removeStatus){
-//           System.out.println("Resource removed successfully!");
-//           return true;
-//       }
-//           System.out.println("Failed to remove! Resource wasn't added for lesson:" + l.getTitle() + ".");
-//          return false;
-//   }
+    }   
    
     public void logout(){
         save();

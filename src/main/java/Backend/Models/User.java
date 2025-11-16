@@ -4,6 +4,7 @@
 
 package Backend.Models;
 
+import Backend.Database.Info;
 import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -127,10 +128,7 @@ public User(JSONObject j) {
             System.out.println("Invalid role. Role not changed.");
         }
     }
-
-
-    @Override
-    public int getSearchKey() { return userId; }
+    public int getUserID() { return userId; }
 
     @Override
     public JSONObject toJSON() {
@@ -143,7 +141,5 @@ public User(JSONObject j) {
         return j;
     }
 
-    //for polymorphism
-    public abstract void openDashboard(JFrame parentFrame);
 }
 
