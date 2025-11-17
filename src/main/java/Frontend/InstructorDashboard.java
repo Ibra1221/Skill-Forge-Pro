@@ -75,10 +75,7 @@ public class InstructorDashboard extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnManageCoursesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageCoursesActionPerformed
-       parent.setContentPane(new ManagerCourse(parent));
-       parent.revalidate();
-       parent.repaint();
-      
+
         
     }//GEN-LAST:event_btnManageCoursesActionPerformed
 

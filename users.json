@@ -1,0 +1,26 @@
+[
+    {
+        "role": "student",
+        "enrolledCourses": [],
+        "userId": 2225,
+        "email": "cdscds@gmail.com",
+        "passwordHash": "aa245396c12366ad973e0868b3d4c090f7a9866c9aaa69e731efacda68d129cf",
+        "username": "dcscsd"
+    },
+    {
+        "role": "student",
+        "enrolledCourses": [],
+        "userId": 2222,
+        "email": "csdcsdc@gmial.com",
+        "passwordHash": "3ccd7af03ff9ca823487ec6b519ea08b19249bd410785d9f8dcf5f73c9bf13c1",
+        "username": "cscdc"
+    },
+    {
+        "role": "student",
+        "enrolledCourses": [],
+        "userId": 9505,
+        "email": "pola@gmail.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "Pola"
+    }
+]
