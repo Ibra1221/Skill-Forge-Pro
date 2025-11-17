@@ -18,7 +18,7 @@ public class InstructorService {
         this.instructor = instructor;
         courses = new CourseDatabase("courses.json");
         courses.readFromFile();
-        instructors = new InstructorDatabase("instructors.json");
+        instructors = new InstructorDatabase("users.json");
         instructors.readFromFile();
     }
 
@@ -27,7 +27,6 @@ public class InstructorService {
         boolean addStatus = courses.insertRecord(newCourse.toJSON());
         if (addStatus) {
             System.out.println("Added Course successfully!");
-            
             instructors.addCourseIdToInstructor(instructor.getUserId(), courseId);
             save();
         }
@@ -49,7 +48,6 @@ public class InstructorService {
         boolean deleteStatus = courses.deleteCourse(c.getCourseId());
         if (deleteStatus) {
             System.out.println("Deleted Course successfully!");
-            
             instructors.removeCourseIdFromInstructor(instructor.getUserId(), c.getCourseId());
             save();
         }
@@ -105,7 +103,6 @@ public class InstructorService {
     }
 
     public ArrayList<Integer> getCreatedCoursesIds() {
-
         Instructor updatedInstructor = instructors.getInstructorById(instructor.getUserId());
         if (updatedInstructor != null) {
             return updatedInstructor.getCreatedCourseIds();
@@ -120,4 +117,5 @@ public class InstructorService {
 
     public void logout() {
         save();
-    }}
+    }
+}

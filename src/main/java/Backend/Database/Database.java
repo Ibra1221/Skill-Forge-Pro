@@ -16,6 +16,7 @@ import org.json.JSONObject;
  *
  * @author pola-nasser13
  */
+
 public abstract class Database<D extends Info> {
 
     protected ArrayList<D> records;

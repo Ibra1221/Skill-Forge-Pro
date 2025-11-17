@@ -5,7 +5,12 @@
 package Backend.Database;
 
 import Backend.Models.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -21,7 +26,49 @@ public class InstructorDatabase extends Database<Instructor> {
 
     @Override
     public Instructor createRecordFrom(JSONObject j) {
+        String r = j.optString("role", "");
+        if (!"instructor".equalsIgnoreCase(r)) return null;
         return new Instructor(j);
+    }
+
+    private JSONArray readAllUsersArray() {
+        try {
+            File file = new File(filename);
+            if (!file.exists()) return new JSONArray();
+            StringBuilder content = new StringBuilder();
+            Scanner sc = new Scanner(file);
+            while (sc.hasNextLine()) {
+                content.append(sc.nextLine());
+            }
+            sc.close();
+            if (content.length() == 0) return new JSONArray();
+            return new JSONArray(content.toString());
+        } catch (Exception e) {
+            return new JSONArray();
+        }
+    }
+
+    private boolean writeAllUsersArray(JSONArray arr) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
+            pw.write(arr.toString(4));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void updateUserInFile(int userId, JSONObject updated) {
+        JSONArray arr = readAllUsersArray();
+        boolean changed = false;
+        for (int i = 0; i < arr.length(); i++) {
+            JSONObject obj = arr.getJSONObject(i);
+            if (obj.optInt("userId", -1) == userId) {
+                arr.put(i, updated);
+                changed = true;
+                break;
+            }
+        }
+        if (changed) writeAllUsersArray(arr);
     }
 
     @Override
@@ -29,12 +76,18 @@ public class InstructorDatabase extends Database<Instructor> {
         try {
             int userId = j.getInt("userId");
             String email = j.getString("email");
-            for (Instructor ins : records) {
-                if (ins.getUserId() == userId || ins.getEmail().equalsIgnoreCase(email)) return false;
+            JSONArray arr = readAllUsersArray();
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                if (obj.optInt("userId", -1) == userId) return false;
+                if (obj.optString("email", "").equalsIgnoreCase(email)) return false;
             }
+            JSONArray newArr = arr;
+            newArr.put(j);
+            boolean ok = writeAllUsersArray(newArr);
+            if (!ok) return false;
             Instructor newIns = createRecordFrom(j);
-            records.add(newIns);
-            saveToFile();
+            if (newIns != null) records.add(newIns);
             return true;
         } catch (Exception e) {
             System.out.println("Failed to insert instructor: " + e.getMessage());
@@ -43,7 +96,9 @@ public class InstructorDatabase extends Database<Instructor> {
     }
 
     public Instructor getInstructorById(int instructorId) {
-        for (Instructor ins : records) {
+        readFromFile();
+        for (int i = 0; i < records.size(); i++) {
+            Instructor ins = records.get(i);
             if (ins.getUserId() == instructorId && "instructor".equalsIgnoreCase(ins.getRole())) {
                 return ins;
             }
@@ -52,7 +107,9 @@ public class InstructorDatabase extends Database<Instructor> {
     }
 
     public Instructor getInstructorByEmail(String email) {
-        for (Instructor ins : records) {
+        readFromFile();
+        for (int i = 0; i < records.size(); i++) {
+            Instructor ins = records.get(i);
             if (ins.getEmail().equalsIgnoreCase(email) && "instructor".equalsIgnoreCase(ins.getRole())) {
                 return ins;
             }
@@ -65,18 +122,26 @@ public class InstructorDatabase extends Database<Instructor> {
     }
 
     public boolean addCourseIdToInstructor(int instructorId, int courseId) {
+        readFromFile();
         Instructor ins = getInstructorById(instructorId);
         if (ins == null) return false;
         boolean added = ins.addCourseId(courseId);
-        if (added) saveToFile();
+        if (added) {
+            JSONObject updated = ins.toJSON();
+            updateUserInFile(instructorId, updated);
+        }
         return added;
     }
 
     public boolean removeCourseIdFromInstructor(int instructorId, int courseId) {
+        readFromFile();
         Instructor ins = getInstructorById(instructorId);
         if (ins == null) return false;
         boolean removed = ins.removeCourseId(courseId);
-        if (removed) saveToFile();
+        if (removed) {
+            JSONObject updated = ins.toJSON();
+            updateUserInFile(instructorId, updated);
+        }
         return removed;
     }
 

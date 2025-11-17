@@ -6,6 +6,7 @@ import Backend.Models.Instructor;
 import Backend.Models.Student;
 import org.json.JSONObject;
 
+
 public class AuthService {
 
     private StudentDatabase students;
@@ -14,14 +15,12 @@ public class AuthService {
     public AuthService() {
         students = new StudentDatabase("users.json");
         instructors = new InstructorDatabase("users.json");
+
+        students.readFromFile();
+        instructors.readFromFile();
     }
 
     public Student loginStudent(String email, String enteredPassword) {
-        if (students == null) {
-            System.out.println("Student database not initialized!");
-            return null;
-        }
-
         Student student = students.getStudentByEmail(email);
 
         if (student == null) {
@@ -43,11 +42,6 @@ public class AuthService {
     }
 
     public Instructor loginInstructor(String email, String enteredPassword) {
-        if (instructors == null) {
-            System.out.println("Instructor database not initialized!");
-            return null;
-        }
-
         Instructor instructor = instructors.getInstructorByEmail(email);
 
         if (instructor == null) {
@@ -75,10 +69,13 @@ public class AuthService {
             Student s = new Student(id, username, email, password);
             JSONObject JSONUser = s.toJSON();
             insertStatus = students.insertRecord(JSONUser);
-        } else if ("instructor".equalsIgnoreCase(role)) {
+            students.saveToFile();
+        } 
+        else if ("instructor".equalsIgnoreCase(role)) {
             Instructor ins = new Instructor(id, username, email, password);
             JSONObject JSONUser = ins.toJSON();
             insertStatus = instructors.insertRecord(JSONUser);
+            instructors.saveToFile();
         }
 
         return insertStatus;

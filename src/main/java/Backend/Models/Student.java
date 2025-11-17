@@ -47,13 +47,10 @@ public class Student extends User {
         return true;
     }
     
-    
     @Override
-       public String getRole() {
+    public String getRole() {
         return "student";
     }
- 
-    
 
     public boolean dropCourseById(int courseId) {
         boolean removed = false;
@@ -116,4 +113,9 @@ public class Student extends User {
         j.put("enrolledCourses", arr);
         return j;
     }
+
+    public ArrayList<Integer> getCompletedLessons(int courseId) {
+        return getCompletedLessonsByCourseId(courseId);
+    }
 }
+
