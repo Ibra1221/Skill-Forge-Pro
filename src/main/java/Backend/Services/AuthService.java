@@ -23,37 +23,64 @@ public class AuthService {
         instructors.readFromFile();
     }
     
-    public User login(String email, String enteredPassword, String role){
-        User user = null;
-        if(role.equals("Student")){
-        user = students.getStudentByEmail(email);
-        }
-         else if(role.equals("Instructor")){
-            user = instructors.getInstructorByEmail(email);
-        }
-        if(user == null){
-            System.out.println("No User found");
-            return null;
-        }
-        if(!user.verifyPassword(enteredPassword)){
-            System.out.println("Wrong Password!");
-            return null;
-        }
-       return user; 
+public Student loginStudent(String email, String enteredPassword) {
+    Student student = students.getStudentByEmail(email);
+
+    if (student == null) {
+        System.out.println("No Student found");
+        return null;
     }
+
+    // check correct role
+    if (!"student".equalsIgnoreCase(student.getRole())) {
+        System.out.println("User is not a student");
+        return null;
+    }
+
+    if (!student.verifyPassword(enteredPassword)) {
+        System.out.println("Wrong Password!");
+        return null;
+    }
+
+    return student;
+}
+
+public Instructor loginInstructor(String email, String enteredPassword) {
+    Instructor instructor = instructors.getInstructorByEmail(email);
+
+    if (instructor == null) {
+        System.out.println("No Instructor found");
+        return null;
+    }
+
+    // check correct role
+    if (!"instructor".equalsIgnoreCase(instructor.getRole())) {
+        System.out.println("User is not an instructor");
+        return null;
+    }
+
+    if (!instructor.verifyPassword(enteredPassword)) {
+        System.out.println("Wrong Password!");
+        return null;
+    }
+
+    return instructor;
+}
+
     
    public boolean signup(int id, String role, String username,String email, String password){
-         User user = null;
          boolean insertStatus = false;
         if(role.equals("Student")){
-             user = new Student(id,  username,email,  password);
-             JSONObject JSONUser = user.toJSON();
+            Student s;
+             s = new Student(id,  username,email,  password);
+             JSONObject JSONUser = s.toJSON();
              insertStatus = students.insertRecord(JSONUser);
             
         }
         else if(role.equals("Instructor")){
-            user = new Instructor(id, username,email, password);
-            JSONObject JSONUser = user.toJSON();
+            Instructor ins;
+            ins = new Instructor(id, username,email, password);
+            JSONObject JSONUser = ins.toJSON();
             insertStatus = instructors.insertRecord(JSONUser);
         }
         return insertStatus;

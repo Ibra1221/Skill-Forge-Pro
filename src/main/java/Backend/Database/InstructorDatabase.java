@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Backend.Database;
+
 import Backend.Models.*;
 import java.util.ArrayList;
 import org.json.JSONObject;
@@ -29,7 +30,9 @@ public class InstructorDatabase extends Database<Instructor> {
             String email = j.getString("email");
             for (int i = 0; i < records.size(); i++) {
                 Instructor ins = records.get(i);
-                if (ins.getUserId() == userId || ins.getEmail().equalsIgnoreCase(email)) return false;
+                if (ins.getUserId() == userId || ins.getEmail().equalsIgnoreCase(email)) {
+                    return false;
+                }
             }
             Instructor newIns = createRecordFrom(j);
             records.add(newIns);
@@ -44,7 +47,13 @@ public class InstructorDatabase extends Database<Instructor> {
     public Instructor getInstructorById(int instructorId) {
         for (int i = 0; i < records.size(); i++) {
             Instructor ins = records.get(i);
-            if (ins.getUserId() == instructorId) return ins;
+            if (ins.getUserId() == instructorId) {
+                if (ins.role.equals("instructor")) {
+                    return ins;
+                } else {
+                    return null;
+                }
+            }
         }
         return null;
     }
@@ -52,7 +61,13 @@ public class InstructorDatabase extends Database<Instructor> {
     public Instructor getInstructorByEmail(String email) {
         for (int i = 0; i < records.size(); i++) {
             Instructor ins = records.get(i);
-            if (ins.getEmail().equalsIgnoreCase(email)) return ins;
+            if (ins.getEmail().equalsIgnoreCase(email)) {
+                if (ins.role.equals("instructor")) {
+                    return ins;
+                } else {
+                    return null;
+                }
+            }
         }
         return null;
     }
@@ -63,23 +78,33 @@ public class InstructorDatabase extends Database<Instructor> {
 
     public boolean addCourseIdToInstructor(int instructorId, int courseId) {
         Instructor ins = getInstructorById(instructorId);
-        if (ins == null) return false;
+        if (ins == null) {
+            return false;
+        }
         boolean added = ins.addCourseId(courseId);
-        if (added) saveToFile();
+        if (added) {
+            saveToFile();
+        }
         return added;
     }
 
     public boolean removeCourseIdFromInstructor(int instructorId, int courseId) {
         Instructor ins = getInstructorById(instructorId);
-        if (ins == null) return false;
+        if (ins == null) {
+            return false;
+        }
         boolean removed = ins.removeCourseId(courseId);
-        if (removed) saveToFile();
+        if (removed) {
+            saveToFile();
+        }
         return removed;
     }
 
     public ArrayList<Integer> getInstructorCourseIds(int instructorId) {
         Instructor ins = getInstructorById(instructorId);
-        if (ins == null) return new ArrayList<Integer>();
+        if (ins == null) {
+            return new ArrayList<Integer>();
+        }
         return ins.getCreatedCourseIds();
     }
 }

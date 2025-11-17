@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Backend.Database;
+
 import Backend.Models.*;
 import java.util.ArrayList;
 import org.json.JSONObject;
@@ -29,7 +30,9 @@ public class StudentDatabase extends Database<Student> {
             String email = j.getString("email");
             for (int i = 0; i < records.size(); i++) {
                 Student s = records.get(i);
-                if (s.getUserId() == userId || s.getEmail().equalsIgnoreCase(email)) return false;
+                if (s.getUserId() == userId || s.getEmail().equalsIgnoreCase(email)) {
+                    return false;
+                }
             }
             Student newStudent = createRecordFrom(j);
             records.add(newStudent);
@@ -44,7 +47,13 @@ public class StudentDatabase extends Database<Student> {
     public Student getStudentById(int studentId) {
         for (int i = 0; i < records.size(); i++) {
             Student s = records.get(i);
-            if (s.getUserId() == studentId) return s;
+            if (s.getUserId() == studentId) {
+                if (s.role.equals("student")) {
+                    return s;
+                } else {
+                    return null;
+                }
+            }
         }
         return null;
     }
@@ -52,7 +61,14 @@ public class StudentDatabase extends Database<Student> {
     public Student getStudentByEmail(String email) {
         for (int i = 0; i < records.size(); i++) {
             Student s = records.get(i);
-            if (s.getEmail().equalsIgnoreCase(email)) return s;
+            if (s.getEmail().equalsIgnoreCase(email)) {
+                if (s.role.equals("student")) {
+                    return s;
+                } else {
+                    return null;
+                }
+            }
+
         }
         return null;
     }
@@ -63,31 +79,47 @@ public class StudentDatabase extends Database<Student> {
 
     public boolean enrollCourse(int studentId, int courseId, CourseDatabase courseDB) {
         Student s = getStudentById(studentId);
-        if (s == null) return false;
+        if (s == null) {
+            return false;
+        }
         Course c = courseDB.getCourseById(courseId);
-        if (c == null) return false;
+        if (c == null) {
+            return false;
+        }
         boolean ok1 = s.enrollCourseById(courseId);
         boolean ok2 = c.enrollStudentById(studentId);
-        if (ok1 && ok2) saveToFile();
+        if (ok1 && ok2) {
+            saveToFile();
+        }
         return ok1 && ok2;
     }
 
     public boolean dropCourse(int studentId, int courseId, CourseDatabase courseDB) {
         Student s = getStudentById(studentId);
-        if (s == null) return false;
+        if (s == null) {
+            return false;
+        }
         Course c = courseDB.getCourseById(courseId);
-        if (c == null) return false;
+        if (c == null) {
+            return false;
+        }
         boolean ok1 = s.dropCourseById(courseId);
         boolean ok2 = c.removeStudentById(studentId);
-        if (ok1 && ok2) saveToFile();
+        if (ok1 && ok2) {
+            saveToFile();
+        }
         return ok1 && ok2;
     }
 
     public boolean markLessonCompleted(int studentId, int courseId, int lessonId, CourseDatabase courseDB) {
         Student s = getStudentById(studentId);
-        if (s == null) return false;
+        if (s == null) {
+            return false;
+        }
         Course c = courseDB.getCourseById(courseId);
-        if (c == null) return false;
+        if (c == null) {
+            return false;
+        }
         boolean lessonExists = false;
         ArrayList<Lesson> lessons = c.getLessons();
         for (int i = 0; i < lessons.size(); i++) {
@@ -96,9 +128,13 @@ public class StudentDatabase extends Database<Student> {
                 break;
             }
         }
-        if (!lessonExists) return false;
+        if (!lessonExists) {
+            return false;
+        }
         boolean ok = s.markLessonCompletedById(courseId, lessonId);
-        if (ok) saveToFile();
+        if (ok) {
+            saveToFile();
+        }
         return ok;
     }
 }

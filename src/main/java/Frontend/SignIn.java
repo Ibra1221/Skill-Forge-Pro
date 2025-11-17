@@ -4,6 +4,8 @@
  */
 package Frontend;
 
+import Backend.Models.Instructor;
+import Backend.Models.Student;
 import Backend.Models.User;
 import Backend.Services.AuthService;
 import javax.swing.JFrame;
@@ -94,11 +96,10 @@ this.setPreferredSize(new java.awt.Dimension(600, 500));
     }// </editor-fold>//GEN-END:initComponents
 
     private void SignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignInActionPerformed
- try {
+try {
     String email = Email.getText().trim();
     String password = Password.getText();
 
-    // 1. Validate email
     if (email.isEmpty()) {
         throw new Exception("Email cannot be empty");
     }
@@ -108,45 +109,67 @@ this.setPreferredSize(new java.awt.Dimension(600, 500));
         throw new Exception("Invalid email format");
     }
 
-    // 2. Validate password
     if (password == null || password.length() < 4) {
         throw new Exception("Password too short (min 4 characters)");
     }
 
-    // Attempt login
     AuthService auth = new AuthService();
-    User user = auth.login(email, password, role);
 
-    if (user != null) {
-        JOptionPane.showMessageDialog(this, role + " logged in successfully!");
+    if (role.equalsIgnoreCase("Instructor")) {
 
-        // Clear input fields
+        Instructor instructor = auth.loginInstructor(email, password);
+
+        if (instructor == null) {
+            JOptionPane.showMessageDialog(this, "Invalid email or password!");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Instructor logged in successfully!");
         Email.setText("");
         Password.setText("");
 
-        // Close SignIn window
         JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
         parentFrame.dispose();
 
-        // Open dashboard based on role
-        JFrame dashFrame = new JFrame();
-        dashFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dashFrame.setLocationRelativeTo(null); // center window
+        JFrame dash = new JFrame("Instructor Dashboard");
+        dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dash.getContentPane().add(new InstructorDashboard(instructor));
+        dash.pack();
+        dash.setLocationRelativeTo(null);
+        dash.setVisible(true);
+        return;
+    }
 
-        if (role.equalsIgnoreCase("Instructor")) {
-            dashFrame.setTitle("Instructor Dashboard");
-            dashFrame.getContentPane().add(new InstructorDashboard(user));
-        } 
+    if (role.equalsIgnoreCase("Student")) {
 
-        dashFrame.pack();
-        dashFrame.setVisible(true);
+        Student student = auth.loginStudent(email, password);
 
-    } else {
-        JOptionPane.showMessageDialog(this, "Login failed! Check email or password.");
+        if (student == null) {
+            JOptionPane.showMessageDialog(this, "Invalid email or password!");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Student logged in successfully!");
+        Email.setText("");
+        Password.setText("");
+
+        JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        parentFrame.dispose();
+
+        JFrame dash = new JFrame("Student Dashboard");
+        dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dash.getContentPane().add(new StudentDashboard(student));
+        dash.pack();
+        dash.setLocationRelativeTo(null);
+        dash.setVisible(true);
+        return;
     }
 
 } catch (Exception e) {
-    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());}
+    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+}
+
+
     }//GEN-LAST:event_SignInActionPerformed
 
     private void EmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmailActionPerformed

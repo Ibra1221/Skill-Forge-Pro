@@ -13,6 +13,7 @@ public class Student extends User {
 
     private ArrayList<Integer> enrolledCourseIds;
     private HashMap<Integer, ArrayList<Integer>> progress;
+    public static final String role="student";
 
     public Student(int userId, String username, String email, String password) {
         super(userId, username, email, password, "student");

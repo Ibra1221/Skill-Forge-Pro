@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Instructor extends User {
 
     private ArrayList<Integer> createdCourseIds;
+    public static final String role="instructor";
 
     public Instructor(int userId, String username, String email, String password) {
         super(userId, username, email, password, "instructor");
