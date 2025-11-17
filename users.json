@@ -1,26 +1,8 @@
-[
-    {
-        "role": "instructor",
-        "createdCourses": [21212],
-        "userId": 988,
-        "email": "pola3@gmail.com",
-        "passwordHash": "fa3cfb3f1bb823aa9501f88f1f95f732ee6fef2c3a48be7f1d38037b216a549f",
-        "username": "pola"
-    },
-    {
-        "role": "instructor",
-        "createdCourses": [],
-        "userId": 123,
-        "email": "qq@gmail.com",
-        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
-        "username": "qq"
-    },
-    {
-        "role": "instructor",
-        "createdCourses": [],
-        "userId": 12,
-        "email": "qw@gmail.com",
-        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
-        "username": "qw"
-    }
-]
+[{
+    "role": "instructor",
+    "createdCourses": [],
+    "userId": 9505,
+    "email": "qw@gmail.com",
+    "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+    "username": "pola"
+}]
