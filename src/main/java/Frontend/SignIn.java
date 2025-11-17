@@ -94,45 +94,59 @@ this.setPreferredSize(new java.awt.Dimension(600, 500));
     }// </editor-fold>//GEN-END:initComponents
 
     private void SignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignInActionPerformed
-   try {
-        String email = Email.getText().trim();
-        String password = Password.getText();
+ try {
+    String email = Email.getText().trim();
+    String password = Password.getText();
 
-        // 1. Validate email
-        if (email.isEmpty()) {
-            throw new Exception("Email cannot be empty");
-        }
-        int atPos = email.indexOf("@");
-        int dotPos = email.lastIndexOf(".");
-        if (atPos <= 0 || dotPos <= atPos + 1 || dotPos == email.length() - 1) {
-            throw new Exception("Invalid email format");
-        }
-
-        // 2. Validate password
-        if (password == null || password.length() < 4) {
-            throw new Exception("Password too short (min 4 characters)");
-        }
-
-        AuthService auth = new AuthService();
-        User user = auth.login(email, password, role);
-
-        if(user != null){
-            JOptionPane.showMessageDialog(this, role + " logged in successfully!");
-            Email.setText("");
-            Password.setText("");
-
-            JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-            parentFrame.dispose(); // close SignIn window
-
-
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Login failed! Check email or password.");
-        }
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    // 1. Validate email
+    if (email.isEmpty()) {
+        throw new Exception("Email cannot be empty");
     }
+    int atPos = email.indexOf("@");
+    int dotPos = email.lastIndexOf(".");
+    if (atPos <= 0 || dotPos <= atPos + 1 || dotPos == email.length() - 1) {
+        throw new Exception("Invalid email format");
+    }
+
+    // 2. Validate password
+    if (password == null || password.length() < 4) {
+        throw new Exception("Password too short (min 4 characters)");
+    }
+
+    // Attempt login
+    AuthService auth = new AuthService();
+    User user = auth.login(email, password, role);
+
+    if (user != null) {
+        JOptionPane.showMessageDialog(this, role + " logged in successfully!");
+
+        // Clear input fields
+        Email.setText("");
+        Password.setText("");
+
+        // Close SignIn window
+        JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        parentFrame.dispose();
+
+        // Open dashboard based on role
+        JFrame dashFrame = new JFrame();
+        dashFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dashFrame.setLocationRelativeTo(null); // center window
+
+        if (role.equalsIgnoreCase("Instructor")) {
+            dashFrame.setTitle("Instructor Dashboard");
+            dashFrame.getContentPane().add(new InstructorDashboard(user));
+        } 
+
+        dashFrame.pack();
+        dashFrame.setVisible(true);
+
+    } else {
+        JOptionPane.showMessageDialog(this, "Login failed! Check email or password.");
+    }
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());}
     }//GEN-LAST:event_SignInActionPerformed
 
     private void EmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmailActionPerformed

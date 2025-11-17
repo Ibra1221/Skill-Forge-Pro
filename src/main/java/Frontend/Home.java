@@ -133,31 +133,28 @@ public class Home extends javax.swing.JFrame {
     private void SignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignUpActionPerformed
     String role = jComboBox1.getSelectedItem().toString();
     
-    // Create a new JFrame for SignUp
-    JFrame signupFrame = new JFrame("Sign Up - " + role);
+    JFrame signupFrame = new JFrame("Sign Up" + role);
     SignUp signupPanel = new SignUp(role);
     
-    signupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // closes only this frame
+    signupFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     signupFrame.getContentPane().add(signupPanel);
     signupFrame.pack();
-    signupFrame.setLocationRelativeTo(null); // center on screen
+    signupFrame.setLocationRelativeTo(null);
     signupFrame.setVisible(true);
     
-    // Close Home window
     this.dispose();
     }//GEN-LAST:event_SignUpActionPerformed
 
     private void SignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignInActionPerformed
     String role = jComboBox1.getSelectedItem().toString();
     
-    // Create a new JFrame for SignIn
-    JFrame signinFrame = new JFrame("Sign In - " + role);
+    JFrame signinFrame = new JFrame("Sign In" + role);
     SignIn signinPanel = new SignIn(role);
     
-    signinFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // closes only this frame
+    signinFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
     signinFrame.getContentPane().add(signinPanel);
     signinFrame.pack();
-    signinFrame.setLocationRelativeTo(null); // center on screen
+    signinFrame.setLocationRelativeTo(null); 
     signinFrame.setVisible(true);
     
     // Close Home window

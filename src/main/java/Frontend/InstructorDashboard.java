@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package courses;
+package Frontend;
+
+import Backend.Models.User;
 
 /**
  *
@@ -10,10 +12,13 @@ package courses;
  */
 public class InstructorDashboard extends javax.swing.JPanel {
 
-    //private MainFrame parent;//dont forget in the constructor
-    public InstructorDashboard() {
-        //this.parent=parent;
+    private User instructor; // store the logged-in instructor
+
+    public InstructorDashboard(User instructor) {
+        this.instructor = instructor; // store user info
         initComponents();
+
+        jLabel1.setText("Instructor Dashboard");
     }
 
     /**
@@ -45,6 +50,11 @@ public class InstructorDashboard extends javax.swing.JPanel {
         btnManageLessons.setBackground(new java.awt.Color(255, 0, 0));
         btnManageLessons.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnManageLessons.setText("Manage Lessons");
+        btnManageLessons.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageLessonsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -78,6 +88,10 @@ public class InstructorDashboard extends javax.swing.JPanel {
 
         
     }//GEN-LAST:event_btnManageCoursesActionPerformed
+
+    private void btnManageLessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageLessonsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnManageLessonsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
