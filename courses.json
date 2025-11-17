@@ -14,5 +14,13 @@
         "courseId": 5675476,
         "instructorId": 9505,
         "lessons": []
+    },
+    {
+        "description": "asdasd",
+        "students": [],
+        "title": "qwer",
+        "courseId": 222,
+        "instructorId": 9505,
+        "lessons": []
     }
 ]

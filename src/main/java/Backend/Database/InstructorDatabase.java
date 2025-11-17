@@ -5,12 +5,7 @@
 package Backend.Database;
 
 import Backend.Models.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Scanner;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -26,8 +21,6 @@ public class InstructorDatabase extends Database<Instructor> {
 
     @Override
     public Instructor createRecordFrom(JSONObject j) {
-        String r = j.optString("role", "");
-        if (!"instructor".equalsIgnoreCase(r)) return null;
         return new Instructor(j);
     }
 
@@ -36,18 +29,12 @@ public class InstructorDatabase extends Database<Instructor> {
         try {
             int userId = j.getInt("userId");
             String email = j.getString("email");
-            JSONArray arr = readAllUsersArray();
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject obj = arr.getJSONObject(i);
-                if (obj.optInt("userId", -1) == userId) return false;
-                if (obj.optString("email", "").equalsIgnoreCase(email)) return false;
+            for (Instructor ins : records) {
+                if (ins.getUserId() == userId || ins.getEmail().equalsIgnoreCase(email)) return false;
             }
-            JSONArray newArr = arr;
-            newArr.put(j);
-            boolean ok = writeAllUsersArray(newArr);
-            if (!ok) return false;
             Instructor newIns = createRecordFrom(j);
-            if (newIns != null) records.add(newIns);
+            records.add(newIns);
+            saveToFile();
             return true;
         } catch (Exception e) {
             System.out.println("Failed to insert instructor: " + e.getMessage());
@@ -56,9 +43,7 @@ public class InstructorDatabase extends Database<Instructor> {
     }
 
     public Instructor getInstructorById(int instructorId) {
-        readFromFile();
-        for (int i = 0; i < records.size(); i++) {
-            Instructor ins = records.get(i);
+        for (Instructor ins : records) {
             if (ins.getUserId() == instructorId && "instructor".equalsIgnoreCase(ins.getRole())) {
                 return ins;
             }
@@ -67,9 +52,7 @@ public class InstructorDatabase extends Database<Instructor> {
     }
 
     public Instructor getInstructorByEmail(String email) {
-        readFromFile();
-        for (int i = 0; i < records.size(); i++) {
-            Instructor ins = records.get(i);
+        for (Instructor ins : records) {
             if (ins.getEmail().equalsIgnoreCase(email) && "instructor".equalsIgnoreCase(ins.getRole())) {
                 return ins;
             }
@@ -82,26 +65,18 @@ public class InstructorDatabase extends Database<Instructor> {
     }
 
     public boolean addCourseIdToInstructor(int instructorId, int courseId) {
-        readFromFile();
         Instructor ins = getInstructorById(instructorId);
         if (ins == null) return false;
         boolean added = ins.addCourseId(courseId);
-        if (added) {
-            JSONObject updated = ins.toJSON();
-            updateUserInFile(instructorId, updated);
-        }
+        if (added) saveToFile();
         return added;
     }
 
     public boolean removeCourseIdFromInstructor(int instructorId, int courseId) {
-        readFromFile();
         Instructor ins = getInstructorById(instructorId);
         if (ins == null) return false;
         boolean removed = ins.removeCourseId(courseId);
-        if (removed) {
-            JSONObject updated = ins.toJSON();
-            updateUserInFile(instructorId, updated);
-        }
+        if (removed) saveToFile();
         return removed;
     }
 

@@ -31,52 +31,6 @@ public abstract class Database<D extends Info> {
 
     public abstract boolean insertRecord(JSONObject j);
 
-    protected JSONArray readAllUsersArray() {
-        try {
-            File file = new File(filename);
-            if (!file.exists()) {
-                return new JSONArray();
-            }
-            StringBuilder content = new StringBuilder();
-            Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()) {
-                content.append(sc.nextLine());
-            }
-            sc.close();
-            if (content.length() == 0) {
-                return new JSONArray();
-            }
-            return new JSONArray(content.toString());
-        } catch (Exception e) {
-            return new JSONArray();
-        }
-    }
-
-    protected boolean writeAllUsersArray(JSONArray arr) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
-            pw.write(arr.toString(4));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    protected void updateUserInFile(int userId, JSONObject updated) {
-        JSONArray arr = readAllUsersArray();
-        boolean changed = false;
-        for (int i = 0; i < arr.length(); i++) {
-            JSONObject obj = arr.getJSONObject(i);
-            if (obj.optInt("userId", -1) == userId) {
-                arr.put(i, updated);
-                changed = true;
-                break;
-            }
-        }
-        if (changed) {
-            writeAllUsersArray(arr);
-        }
-    }
-
     public void readFromFile() {
         records.clear();
         try {
