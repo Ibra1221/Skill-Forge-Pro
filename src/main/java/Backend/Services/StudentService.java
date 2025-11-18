@@ -3,7 +3,6 @@ package Backend.Services;
 import Backend.Database.CourseDatabase;
 import Backend.Database.UserDatabase;
 import Backend.Models.Course;
-import Backend.Models.Lesson;
 import Backend.Models.Student;
 import java.util.ArrayList;
 
@@ -24,12 +23,12 @@ public class StudentService {
     }
 
     public boolean enrollInCourse(int courseId) {
-        boolean enrolled = courses.enrollStudent(courseId, student.getUserId());
-        if (enrolled) {
+        boolean enrollStatus = courses.enrollStudent(courseId, student.getUserId());
+        if (enrollStatus) {
             student.enrollCourseById(courseId);
             users.updateUser(student);
         }
-        return enrolled;
+        return enrollStatus;
     }
 
     public boolean dropCourse(int courseId) {
@@ -48,15 +47,15 @@ public class StudentService {
 
     public boolean unmarkLesson(int courseId, int lessonId) {
         ArrayList<Integer> completedLessons = student.getCompletedLessonsByCourseId(courseId);
-        boolean removed = false;
+        boolean removedStatus = false;
         for (int i = 0; i < completedLessons.size(); i++) {
             if (completedLessons.get(i) == lessonId) {
                 completedLessons.remove(i);
-                removed = true;
+                removedStatus = true;
                 break;
             }
         }
-        if (removed) {
+        if (removedStatus) {
             return users.updateUser(student);
         }
         return false;
