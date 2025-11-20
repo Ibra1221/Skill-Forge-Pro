@@ -6,7 +6,6 @@ import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
 import java.util.ArrayList;
-import org.json.JSONObject;
 
 public class InstructorService {
 
@@ -22,12 +21,12 @@ public class InstructorService {
 
     public boolean createCourse(int courseId, String title, String description) {
         Course newCourse = new Course(courseId, title, description, instructor.getUserId());
-        boolean success = courses.insertRecord(newCourse.toJSON());
-        if (success) {
+        boolean createStatus = courses.insertRecord(newCourse.toJSON());
+        if (createStatus) {
             instructor.addCourseId(courseId);
             users.updateUser(instructor);
         }
-        return success;
+        return createStatus;
     }
 
     public boolean updateCourse(int oldCourseId, int newCourseId, String title, String description) {
@@ -45,20 +44,20 @@ public class InstructorService {
         course.setTitle(title);
         course.setDescription(description);
         
-        boolean courseUpdated = courses.updateCourse(course);
-        if (courseUpdated) {
+        boolean updateStatus = courses.updateCourse(course);
+        if (updateStatus) {
             users.updateUser(instructor);
         }
-        return courseUpdated;
+        return updateStatus;
     }
 
     public boolean deleteCourse(Course c) {
-        boolean deleted = courses.deleteCourse(c.getCourseId());
-        if (deleted) {
+        boolean deleteStatus = courses.deleteCourse(c.getCourseId());
+        if (deleteStatus) {
             instructor.removeCourseId(c.getCourseId());
             users.updateUser(instructor);
         }
-        return deleted;
+        return deleteStatus;
     }
 
     public Course getCourseById(int id) {

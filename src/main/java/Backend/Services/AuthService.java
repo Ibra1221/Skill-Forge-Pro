@@ -3,6 +3,7 @@ package Backend.Services;
 import Backend.Database.UserDatabase;
 import Backend.Models.Instructor;
 import Backend.Models.Student;
+import Backend.Models.User;
 import org.json.JSONObject;
 
 public class AuthService {
@@ -13,22 +14,20 @@ public class AuthService {
         userDB = new UserDatabase("users.json");
     }
 
-    public Student loginStudent(String email, String enteredPassword) {
-        Student student = userDB.getStudentByEmail(email);
-        if (student != null && student.verifyPassword(enteredPassword)) {
-            return student;
+    public User login(String email, String enteredPassword, String role){
+        User user = null;
+        if("student".equalsIgnoreCase(role)){
+            user = userDB.getStudentByEmail(email);
+        }
+        else if("instructor".equalsIgnoreCase(role)){
+            user = userDB.getInstructorByEmail(email);
+        }
+        if (user != null && user.verifyPassword(enteredPassword)) {
+            return user;
         }
         return null;
     }
-
-    public Instructor loginInstructor(String email, String enteredPassword) {
-        Instructor instructor = userDB.getInstructorByEmail(email);
-        if (instructor != null && instructor.verifyPassword(enteredPassword)) {
-            return instructor;
-        }
-        return null;
-    }
-
+    
     public boolean signup(int id, String role, String username, String email, String password) {
         if ("student".equalsIgnoreCase(role)) {
             Student student = new Student(id, username, email, password);
@@ -38,9 +37,5 @@ public class AuthService {
             return userDB.insertRecord(instructor.toJSON());
         }
         return false;
-    }
-
-    public UserDatabase getUserDatabase() {
-        return userDB;
     }
 }
