@@ -8,6 +8,11 @@ package courses;
  *
  * @author Pc
  */
-public class ApprovalStatus {
+public enum ApprovalStatus {
+    PENDING,
+    APPROVED,
+    REJECTED,
     
 }
+
+
