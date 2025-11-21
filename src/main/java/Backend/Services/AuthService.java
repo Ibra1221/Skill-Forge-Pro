@@ -15,13 +15,7 @@ public class AuthService {
     }
 
     public User login(String email, String enteredPassword, String role){
-        User user = null;
-        if("student".equalsIgnoreCase(role)){
-            user = userDB.getStudentByEmail(email);
-        }
-        else if("instructor".equalsIgnoreCase(role)){
-            user = userDB.getInstructorByEmail(email);
-        }
+        User user = userDB.getUserByEmail(email, role);
         if (user != null && user.verifyPassword(enteredPassword)) {
             return user;
         }
