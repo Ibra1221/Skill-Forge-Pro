@@ -56,7 +56,7 @@ public class Home extends javax.swing.JFrame {
         jLabel4.setText("Pola Nasser 9505 - Ibrahim Ahmed 9436 - Mohamed Walaa 9574 - Youssef Hisham 9569");
 
         jComboBox1.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Instructor" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "student", "instructor", "admin" }));
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
 
         jLabel6.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N

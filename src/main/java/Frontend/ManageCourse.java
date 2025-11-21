@@ -568,25 +568,6 @@ public class ManageCourse extends javax.swing.JPanel {
         }
     };
     courseTable.getSelectionModel().addListSelectionListener(coursesListener);
-
-//    lessonsListener = new javax.swing.event.ListSelectionListener() {
-//        public void valueChanged(javax.swing.event.ListSelectionEvent e) {
-//            if (!e.getValueIsAdjusting()) {
-//                int row = lessonsTable.getSelectedRow();
-//                if (row >= 0 && selectedCourse != null) {
-//                    int lessonId = (int) lessonsTable.getValueAt(row, 0);
-//                    selectedLesson = selectedCourse.getLessonById(lessonId);
-//                    if (selectedLesson != null) {
-//                        tfuLessonId.setText(String.valueOf(selectedLesson.getLessonId()));
-//                        tfuTitle.setText(selectedLesson.getTitle());
-//                        tfuContent.setText(selectedLesson.getContent());
-//                        tfuResources.setText(String.join(",", selectedLesson.getResources()));
-//                    }
-//                }
-//            }
-//        }
-//    };
-//    lessonsTable.getSelectionModel().addListSelectionListener(lessonsListener);
 }
     
     private void addStudentToTable(Student s, Course c) {
