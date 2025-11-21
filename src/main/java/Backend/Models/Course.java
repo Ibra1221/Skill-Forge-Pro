@@ -15,7 +15,6 @@ import org.json.JSONObject;
  * @author Pc
  */
 public class Course implements Info {
-
     private int courseId;
     private String title;
     private String description;
@@ -23,6 +22,9 @@ public class Course implements Info {
     private ArrayList<Lesson> lessons;
     private ArrayList<Integer> studentIds;
     private ApprovalStatus approvalStatus;
+    private Integer approvedBy;
+    private Integer rejectedBy;
+    private String rejectionReason;
 
     public Course(int courseId, String title, String description, int instructorId) {
         setCourseId(courseId);
@@ -31,7 +33,7 @@ public class Course implements Info {
         setInstructorId(instructorId);
         this.lessons = new ArrayList<>();
         this.studentIds = new ArrayList<>();
-        setApprovalStatus(ApprovalStatus.PENDING);
+        this.approvalStatus = ApprovalStatus.PENDING;
     }
 
     public Course(JSONObject json) {
@@ -39,7 +41,26 @@ public class Course implements Info {
         this.title = json.getString("title");
         this.description = json.getString("description");
         this.instructorId = json.getInt("instructorId");
-        this.approvalStatus= ApprovalStatus.valueOf(json.optString("approvalStatus","PENDING"));
+        this.approvalStatus = ApprovalStatus.valueOf(json.optString("approvalStatus","PENDING"));
+        
+        if (json.has("approvedBy")) {
+            this.approvedBy = json.getInt("approvedBy");
+        } else {
+            this.approvedBy = null;
+        }
+        
+        if (json.has("rejectedBy")) {
+            this.rejectedBy = json.getInt("rejectedBy");
+        } else {
+            this.rejectedBy = null;
+        }
+        
+        if (json.has("rejectionReason")) {
+            this.rejectionReason = json.getString("rejectionReason");
+        } else {
+            this.rejectionReason = null;
+        }
+        
         this.lessons = new ArrayList<>();
         JSONArray lessonArr = json.optJSONArray("lessons");
         if (lessonArr != null) {
@@ -77,8 +98,23 @@ public class Course implements Info {
         }
         this.instructorId = instructorId;
     }
+
     public void setApprovalStatus(ApprovalStatus status){
-    this.approvalStatus=status;
+        this.approvalStatus = status;
+    }
+
+    public void approveCourse(int adminId) {
+        this.approvalStatus = ApprovalStatus.APPROVED;
+        this.approvedBy = adminId;
+        this.rejectedBy = null;
+        this.rejectionReason = null;
+    }
+    
+    public void rejectCourse(int adminId, String reason) {
+        this.approvalStatus = ApprovalStatus.REJECTED;
+        this.rejectedBy = adminId;
+        this.approvedBy = null;
+        this.rejectionReason = reason;
     }
 
     public boolean addLesson(Lesson lesson) {
@@ -105,7 +141,6 @@ public class Course implements Info {
         for (int i = 0; i < lessons.size(); i++) {
             if (lessons.get(i).getLessonId() == lessonId) {
                 return lessons.get(i);
-                
             }
         }
         return null;
@@ -140,6 +175,9 @@ public class Course implements Info {
         obj.put("description", description);
         obj.put("instructorId", instructorId);
         obj.put("approvalStatus", approvalStatus.toString());
+        if (approvedBy != null) obj.put("approvedBy", approvedBy);
+        if (rejectedBy != null) obj.put("rejectedBy", rejectedBy);
+        if (rejectionReason != null) obj.put("rejectionReason", rejectionReason);
         JSONArray lessonArr = new JSONArray();
         for (int i = 0; i < lessons.size(); i++) {
             lessonArr.put(lessons.get(i).toJSON());
@@ -160,8 +198,21 @@ public class Course implements Info {
     public String getTitle() {
         return title;
     }
+
     public ApprovalStatus getApprovalStatus(){
         return approvalStatus;
+    }
+
+    public Integer getApprovedBy() {
+        return approvedBy;
+    }
+
+    public Integer getRejectedBy() {
+        return rejectedBy;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
     }
 
     public String getDescription() {

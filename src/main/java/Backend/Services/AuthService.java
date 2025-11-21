@@ -1,9 +1,7 @@
 package Backend.Services;
 
 import Backend.Database.UserDatabase;
-import Backend.Models.Instructor;
-import Backend.Models.Student;
-import Backend.Models.User;
+import Backend.Models.*;
 import org.json.JSONObject;
 
 public class AuthService {
