@@ -67,4 +67,8 @@ public class StudentService {
         ArrayList<Integer> completedLessons = student.getCompletedLessonsByCourseId(courseId);
         return completedLessons.size();
     }
+    
+    public int getQuizAttempts(){
+        return student.get
+    }
 }

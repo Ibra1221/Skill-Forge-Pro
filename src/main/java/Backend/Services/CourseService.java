@@ -25,7 +25,7 @@ public class CourseService {
     
     public String getInstructorName(){
         int instructorId = course.getInstructorId();
-        Instructor i = users.getInstructorById(instructorId);
+        Instructor i = (Instructor)users.getUserById(instructorId, "instructor");
         if(i != null){
             return i.getUsername();
         }
@@ -37,6 +37,6 @@ public class CourseService {
     }
     
     public Student getStudentById(int studentid){
-        return users.getStudentById(studentid);
+        return (Student)users.getUserById(studentid,"student");
     }
 }
