@@ -64,11 +64,6 @@ public class StudentService {
         return completedLessons.size();
     }
     
-    public int getQuizAttempts(int lessonId, int courseId){
-        HashMap<String, Integer> totalAttempts = student.getQuizAttempts();
-        String key = courseId + "_" + lessonId;
-        int attempts = totalAttempts.get(key);
-        return attempts;
-    }
+    
     
 }

@@ -8,6 +8,7 @@ import Backend.Database.CourseDatabase;
 import Backend.Database.UserDatabase;
 import Backend.Models.Course;
 import Backend.Models.Lesson;
+import Backend.Models.Question;
 import Backend.Models.Quiz;
 import Backend.Models.Student;
 import java.util.ArrayList;
@@ -81,22 +82,14 @@ public class QuizService {
         return quiz.isPassed(score);
     }
     
-    
-    public ArrayList<Integer> getCorrectAnswers(double score){
-        ArrayList<Integer> correctAnswers = new ArrayList<Integer>();
-        if(isQuizPassed(score)){
-            for(int i = 0; i < quiz.getQuestions().size(); i++){
-                correctAnswers.add(quiz.getQuestions().get(i).getCorrectChoice());
-            }
-            return correctAnswers;
-        }
-        return null;
-    }
-    
     public int getQuizAttempts(){
         HashMap<String, Integer> totalAttempts = student.getQuizAttempts();
         String key = courseId + "_" + lessonId;
         int attempts = totalAttempts.get(key);
         return attempts;
+    }
+    
+    public ArrayList<Question> getQuestions(){
+        return quiz.getQuestions();
     }
 }
