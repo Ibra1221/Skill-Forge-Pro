@@ -19,15 +19,14 @@ public class Question {
     private int correctChoice;
     public Question(int questionId,String text,ArrayList<String> choices,int correctChoice){
         setQuestionId(questionId);
-        setCorrectChoice(correctChoice);
         setText(text);
         setChoices(choices);
-        
+        setCorrectChoice(correctChoice);
     }
     public Question(JSONObject json){
         this.questionId=json.getInt("questionId");
         this.text=json.getString("text");
-        this.correctChoice=json.getInt("correctChoices");
+        this.correctChoice=json.getInt("correctChoice");
         this.choices=new ArrayList<>();
         JSONArray choicesArr=json.getJSONArray("choices");
         if(choicesArr!=null){
@@ -40,7 +39,7 @@ public class Question {
         JSONObject obj=new JSONObject();
         obj.put("questionId", questionId);
         obj.put("text", text);
-        obj.put("correctChoices", correctChoice);
+        obj.put("correctChoice", correctChoice);
         JSONArray choicesArr=new JSONArray();
         for(int i=0;i<choices.size();i++){
             choicesArr.put(choices.get(i));
@@ -82,9 +81,14 @@ public class Question {
     this.text=text;
     }
     public void setChoices(ArrayList<String> choices){
-        if(choices==null||choices.size()>4){
-     throw new IllegalArgumentException("the choices must not exceed than four choices");       
+        if(choices==null||choices.size()>4||choices.size()<2){
+     throw new IllegalArgumentException("the choices must be between 2 and 4 choices");
     }
+        for(int i=0;i<choices.size();i++){
+            if(choices.get(i)==null||choices.get(i).trim().isEmpty()){
+            throw new IllegalArgumentException("Choice"+(i+1)+"cannot be empty");
+            }
+        }
         this.choices=choices;
     }
 }
