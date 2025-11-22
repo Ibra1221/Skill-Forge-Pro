@@ -5,6 +5,7 @@ import Backend.Database.UserDatabase;
 import Backend.Models.Course;
 import Backend.Models.Student;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class StudentService {
 
@@ -29,11 +30,6 @@ public class StudentService {
             users.updateUser(student);
         }
         return enrollStatus;
-    }
-
-    public boolean completeLesson(int courseId, int lessonId) {
-        student.markLessonCompletedById(courseId, lessonId);
-        return users.updateUser(student);
     }
     
     public ArrayList<Course> getEnrolledCourses() {
@@ -68,7 +64,11 @@ public class StudentService {
         return completedLessons.size();
     }
     
-    public int getQuizAttempts(){
-        return student.get
+    public int getQuizAttempts(int lessonId, int courseId){
+        HashMap<String, Integer> totalAttempts = student.getQuizAttempts();
+        String key = courseId + "_" + lessonId;
+        int attempts = totalAttempts.get(key);
+        return attempts;
     }
+    
 }

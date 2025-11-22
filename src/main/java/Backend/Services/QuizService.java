@@ -11,6 +11,7 @@ import Backend.Models.Lesson;
 import Backend.Models.Quiz;
 import Backend.Models.Student;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -54,6 +55,7 @@ public class QuizService {
     }
     
     public double getQuizScore(String answers){
+        student.incrementQuizAttempts(lessonId, courseId);
         String[] answersArray = answers.split(",");
         int correctAnswersCount = 0;
         for(int i=0; i < answersArray.length; i++){
@@ -89,5 +91,12 @@ public class QuizService {
             return correctAnswers;
         }
         return null;
+    }
+    
+    public int getQuizAttempts(){
+        HashMap<String, Integer> totalAttempts = student.getQuizAttempts();
+        String key = courseId + "_" + lessonId;
+        int attempts = totalAttempts.get(key);
+        return attempts;
     }
 }
