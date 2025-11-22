@@ -28,10 +28,10 @@ public class Quiz {
         this.quizId=json.getInt("quizId");
         this.passingScore=json.getInt("passingScore");
         this.questions=new ArrayList<>();
-        JSONArray questionArr=json.optJSONArray("question");
+        JSONArray questionArr=json.optJSONArray("questions");
         if(questionArr!=null){
             for(int i=0;i<questionArr.length();i++){
-          questions.add(new Question(questionArr.getJSONArray(i));
+          questions.add(new Question(questionArr.getJSONObject(i)));
                   }
     }
         
@@ -62,7 +62,7 @@ public class Quiz {
         for(int i=0;i<questions.size();i++){
             questionArr.put(questions.get(i).toJson());
         }
-        obj.put("question", questionArr);
+        obj.put("questions", questionArr);
         return obj;
     }
     public int getQuizId() {
@@ -82,8 +82,8 @@ public class Quiz {
         this.quizId=quizId;
     }
     public void setPassingScore(int passingScore){
-    if(passingScore<0){
-        throw new IllegalArgumentException("passingScore must be greater than 0");
+    if(passingScore<1){
+        throw new IllegalArgumentException("passingScore must be at least 1");
     }  
     this.passingScore=passingScore;
     }
