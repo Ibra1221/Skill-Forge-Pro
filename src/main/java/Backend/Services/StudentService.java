@@ -2,7 +2,9 @@ package Backend.Services;
 
 import Backend.Database.CourseDatabase;
 import Backend.Database.UserDatabase;
+import Backend.Models.Certificate;
 import Backend.Models.Course;
+import Backend.Models.Lesson;
 import Backend.Models.Student;
 import java.util.ArrayList;
 
@@ -29,11 +31,6 @@ public class StudentService {
             users.updateUser(student);
         }
         return enrollStatus;
-    }
-
-    public boolean completeLesson(int courseId, int lessonId) {
-        student.markLessonCompletedById(courseId, lessonId);
-        return users.updateUser(student);
     }
     
     public ArrayList<Course> getEnrolledCourses() {
@@ -68,7 +65,22 @@ public class StudentService {
         return completedLessons.size();
     }
     
-    public int getQuizAttempts(){
-        return student.get
+    public ArrayList<Certificate> getCertificates(){
+        ArrayList<Integer> certificatesIds = student.getCertificates();
+        ArrayList<Certificate> certificates = new ArrayList<Certificate>();
+        for(int i = 0; i < certificatesIds.size(); i++){
+            certificates.add(i, users.getCetificateById(certificatesIds.get(i)));
+        }
+        return certificates;
     }
+    
+    public boolean checkCourseCompletion(Course course){
+     ArrayList<Integer> completedLessons = student.getCompletedLessonsByCourseId(course.getCourseId());
+        ArrayList<Lesson> totalLessons = course.getLessons();
+        if(completedLessons.size() == totalLessons.size()){
+            return true;
+        }
+        return false;
+    }
+    
 }

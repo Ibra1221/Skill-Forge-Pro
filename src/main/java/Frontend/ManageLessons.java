@@ -454,7 +454,7 @@ public ManageLessons(Instructor instructor) {
             }
         }
 
-        boolean added = instructorService.addLesson(selectedCourse, id, title, content, resources);
+        boolean added = instructorService.addLesson(selectedCourse, id, title, content, resources, quiz);
         if (added) {
             JOptionPane.showMessageDialog(this, "Lesson added successfully!");
             loadLessons(selectedCourse);
