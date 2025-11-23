@@ -7,13 +7,14 @@ import org.json.JSONObject;
 
 /**
  *
- * @author Mohamed Walaa
+ * @author pola-nasser13
  */
 public class Student extends User {
     private ArrayList<Integer> enrolledCourseIds;
     private HashMap<Integer, ArrayList<Integer>> progress;
     private HashMap<String, Double> quizScores;
-    private ArrayList<String> certificates;
+    private ArrayList<Certificate> certificates;
+    private HashMap<String, Integer> quizAttempts;
 
     public Student(int userId, String username, String email, String password) {
         super(userId, username, email, password, "student");
@@ -21,6 +22,7 @@ public class Student extends User {
         this.progress = new HashMap<>();
         this.quizScores = new HashMap<>();
         this.certificates = new ArrayList<>();
+        this.quizAttempts = new HashMap<>();
     }
 
     public Student(JSONObject j) {
@@ -29,6 +31,7 @@ public class Student extends User {
         this.progress = new HashMap<>();
         this.quizScores = new HashMap<>();
         this.certificates = new ArrayList<>();
+        this.quizAttempts = new HashMap<>();
         
         JSONArray arr = j.optJSONArray("enrolledCourses");
         if (arr != null) {
@@ -55,24 +58,62 @@ public class Student extends User {
         JSONArray certArr = j.optJSONArray("certificates");
         if (certArr != null) {
             for (int i = 0; i < certArr.length(); i++) {
-                certificates.add(certArr.getString(i));
+                JSONObject certObj = certArr.getJSONObject(i);
+                certificates.add(new Certificate(certObj));
+            }
+        }
+        
+        JSONObject attemptsObj = j.optJSONObject("quizAttempts");
+        if (attemptsObj != null) {
+            for (String key : attemptsObj.keySet()) {
+                quizAttempts.put(key, attemptsObj.getInt(key));
             }
         }
     }
 
+    public void addCertificate(Certificate certificate) {
+        if (certificate != null && !hasCertificate(certificate.getCertificateId())) {
+            certificates.add(certificate);
+        }
+    }
+    
+    public ArrayList<Certificate> getCertificates() {
+        return certificates;
+    }
+    
+    public boolean hasCertificate(String certId) {
+        for (int i = 0; i < certificates.size(); i++) {
+            Certificate cert = certificates.get(i);
+            if (cert.getCertificateId().equals(certId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Certificate getCertificateById(String certId) {
+        for (int i = 0; i < certificates.size(); i++) {
+            Certificate cert = certificates.get(i);
+            if (cert.getCertificateId().equals(certId)) {
+                return cert;
+            }
+        }
+        return null;
+    }
+
     public boolean enrollCourseById(int courseId) {
-        for (int i = 0; i < enrolledCourseIds.size(); i++) if (enrolledCourseIds.get(i) == courseId) return false;
+        for (int i = 0; i < enrolledCourseIds.size(); i++) {
+            if (enrolledCourseIds.get(i) == courseId) return false;
+        }
         enrolledCourseIds.add(courseId);
         progress.put(courseId, new ArrayList<Integer>());
         return true;
     }
     
-    
     @Override
-       public String getRole() {
+    public String getRole() {
         return "student";
     }
- 
 
     public boolean markLessonCompletedById(int courseId, int lessonId) {
         ArrayList<Integer> completed = progress.get(courseId);
@@ -80,7 +121,9 @@ public class Student extends User {
             completed = new ArrayList<Integer>();
             progress.put(courseId, completed);
         }
-        for (int i = 0; i < completed.size(); i++) if (completed.get(i) == lessonId) return false;
+        for (int i = 0; i < completed.size(); i++) {
+            if (completed.get(i) == lessonId) return false;
+        }
         completed.add(lessonId);
         return true;
     }
@@ -98,31 +141,36 @@ public class Student extends User {
     public void setQuizScore(int courseId, int lessonId, double score) {
         String key = courseId + "_" + lessonId;
         quizScores.put(key, score);
-        if (score >= 50) {
+        incrementQuizAttempts(courseId, lessonId);
+        
+        if (score >= 70.0) {
             markLessonCompletedById(courseId, lessonId);
         }
     }
     
     public Double getQuizScore(int courseId, int lessonId) {
-        String key = courseId + "&" + lessonId;
+        String key = courseId + "_" + lessonId;
         return quizScores.get(key);
     }
     
     public boolean hasPassedQuiz(int courseId, int lessonId) {
         Double score = getQuizScore(courseId, lessonId);
-        return score != null && score >= 70;
+        return score != null && score >= 70.0;
     }
     
-    public void addCertificate(String certId) {
-        certificates.add(certId);
+    public void incrementQuizAttempts(int courseId, int lessonId) {
+        String key = courseId + "_" + lessonId;
+        int attempts = quizAttempts.getOrDefault(key, 0);
+        quizAttempts.put(key, attempts + 1);
     }
     
-    public ArrayList<String> getCertificates() {
-        return certificates;
+    public int getQuizAttempts(int courseId, int lessonId) {
+        String key = courseId + "_" + lessonId;
+        return quizAttempts.getOrDefault(key, 0);
     }
     
-    public boolean hasCertificate(String certId) {
-        return certificates.contains(certId);
+    public HashMap<String, Integer> getQuizAttemptsMap() {
+        return new HashMap<>(quizAttempts);
     }
 
     @Override
@@ -151,10 +199,27 @@ public class Student extends User {
         
         JSONArray certArr = new JSONArray();
         for (int i = 0; i < certificates.size(); i++) {
-            certArr.put(certificates.get(i));
+            certArr.put(certificates.get(i).toJSON());
         }
         j.put("certificates", certArr);
         
+        JSONObject attemptsObj = new JSONObject();
+        for (String key : quizAttempts.keySet()) {
+            attemptsObj.put(key, quizAttempts.get(key));
+        }
+        j.put("quizAttempts", attemptsObj);
+        
         return j;
     }
+    public boolean isLessonCompleted(int courseId, int lessonId) {
+    ArrayList<Integer> completed = progress.get(courseId);
+    if (completed == null) return false;
+    
+    for (int i = 0; i < completed.size(); i++) {
+        if (completed.get(i) == lessonId) {
+            return true;
+        }
+    }
+    return false;
+}
 }
