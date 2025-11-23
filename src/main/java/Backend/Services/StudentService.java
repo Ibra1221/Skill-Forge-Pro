@@ -20,6 +20,10 @@ public class StudentService {
         this.student = student;
     }
 
+    public Student getStudent(){
+        return student;
+    }
+    
     public ArrayList<Course> getAllCourses() {
         return courses.getAllCourses();
     }

@@ -70,6 +70,7 @@ public class StudentDashboard extends javax.swing.JPanel {
         certificatesTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         viewAndDownloadCertButton = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setName(""); // NOI18N
 
@@ -220,6 +221,8 @@ public class StudentDashboard extends javax.swing.JPanel {
             }
         });
 
+        jLabel5.setText("After Selecting Lesson:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -229,7 +232,9 @@ public class StudentDashboard extends javax.swing.JPanel {
                 .addComponent(enroll)
                 .addGap(326, 326, 326)
                 .addComponent(accesslessons)
-                .addGap(345, 345, 345)
+                .addGap(214, 214, 214)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(getQuizButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -250,20 +255,19 @@ public class StudentDashboard extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(compLessonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addGap(131, 131, 131)
                                 .addComponent(incompLessonButton))
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(87, 87, 87)
-                        .addComponent(jLabel1)
-                        .addGap(85, 85, 85)))
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane4)
                         .addGap(37, 37, 37))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 70, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel3)
@@ -273,7 +277,7 @@ public class StudentDashboard extends javax.swing.JPanel {
                                 .addGap(122, 122, 122))))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(1007, Short.MAX_VALUE)
+                    .addContainerGap(1231, Short.MAX_VALUE)
                     .addComponent(jLabel4)
                     .addGap(444, 444, 444)))
         );
@@ -307,7 +311,8 @@ public class StudentDashboard extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(enroll)
                             .addComponent(accesslessons)
-                            .addComponent(getQuizButton))
+                            .addComponent(getQuizButton)
+                            .addComponent(jLabel5))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -319,8 +324,10 @@ public class StudentDashboard extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addContainerGap(505, Short.MAX_VALUE)))
         );
-    }// </editor-fold>//GEN-END:initComponents
 
+        jLabel5.getAccessibleContext().setAccessibleName("");
+    }// </editor-fold>//GEN-END:initComponents
+    
     private void loadAvailableCourses() {
         availableModel.setRowCount(0);
         ArrayList<Course> allCourses = studentService.getAllCourses();
@@ -477,11 +484,24 @@ public class StudentDashboard extends javax.swing.JPanel {
     }
 
     int courseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
+    if (selectedCourseId == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
+        return;
+    }
+    
+    int selectedLessonRow = lessonTable.getSelectedRow();
+    if (selectedLessonRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
+        return;
+    }
+
+    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
+
     Course selectedCourse = studentService.getCourse(courseId);
 
     JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
     currentFrame.getContentPane().removeAll();
-    currentFrame.getContentPane().add(new Quiz(studentService.getStudent(), selectedCourse)); //pola change name and pass what Quiz panel needs
+    currentFrame.getContentPane().add(new QuizPanel(studentService.getStudent(), lessonId, courseId, this)); //pola change name and pass what Quiz panel needs
     currentFrame.revalidate();
     currentFrame.repaint();
     }//GEN-LAST:event_getQuizButtonActionPerformed
@@ -494,7 +514,7 @@ public class StudentDashboard extends javax.swing.JPanel {
         return;
     }
 
-    int certId = (Integer) certificatesTable.getValueAt(selectedRow, 0);
+    String certId = (String) certificatesTable.getValueAt(selectedRow, 0);
     Certificate cert = studentService.getCertificateById(certId); //method to be done by obra///////////------------------
 
     JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -519,6 +539,7 @@ public class StudentDashboard extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
