@@ -143,7 +143,7 @@ public class Student extends User {
         quizScores.put(key, score);
         incrementQuizAttempts(courseId, lessonId);
         
-        if (score >= 70.0) {
+        if (score >= 50.0) {
             markLessonCompletedById(courseId, lessonId);
         }
     }

@@ -3,7 +3,10 @@
         "approvalStatus": "APPROVED",
         "approvedBy": 4,
         "description": "we",
-        "students": [3],
+        "students": [
+            3,
+            5
+        ],
         "title": "q",
         "courseId": 2,
         "instructorId": 1,
@@ -12,17 +15,6 @@
                 "quiz": {
                     "quizId": 1,
                     "questions": [
-                        {
-                            "questionId": 43,
-                            "text": "gf",
-                            "correctChoice": 0,
-                            "choices": [
-                                "f",
-                                "f",
-                                "d",
-                                "s"
-                            ]
-                        },
                         {
                             "questionId": 2,
                             "text": "434",
@@ -133,6 +125,16 @@
         "rejectionReason": "pola",
         "courseId": 22,
         "instructorId": 1,
+        "lessons": []
+    },
+    {
+        "approvalStatus": "APPROVED",
+        "approvedBy": 4,
+        "description": "maddet youssef elmofaddala",
+        "students": [3],
+        "title": "programming",
+        "courseId": 12,
+        "instructorId": 19,
         "lessons": []
     }
 ]

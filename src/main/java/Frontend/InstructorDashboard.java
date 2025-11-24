@@ -161,7 +161,8 @@ public class InstructorDashboard extends javax.swing.JPanel {
     dash.getContentPane().add(new CreateQuiz(instructor));
     dash.pack();
     dash.setLocationRelativeTo(null);
-    dash.setVisible(true);    }//GEN-LAST:event_btnCreateQuizActionPerformed
+    dash.setVisible(true);
+    }//GEN-LAST:event_btnCreateQuizActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

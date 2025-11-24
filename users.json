@@ -12,13 +12,38 @@
     },
     {
         "role": "student",
-        "certificates": [],
-        "quizAttempts": {},
-        "enrolledCourses": [{
-            "completedLessons": [],
+        "certificates": [{
+            "studentId": 3,
+            "courseTitle": "q",
+            "instructorName": "pola",
+            "certificateId": "CERT_2_3_1763964915622",
+            "studentName": "q",
+            "issueDate": "2025-11-24",
             "courseId": 2
         }],
-        "quizScores": {},
+        "quizAttempts": {
+            "2_1": 3,
+            "2_2": 1,
+            "2_3": 4
+        },
+        "enrolledCourses": [
+            {
+                "completedLessons": [
+                    1,
+                    3
+                ],
+                "courseId": 2
+            },
+            {
+                "completedLessons": [],
+                "courseId": 12
+            }
+        ],
+        "quizScores": {
+            "2_1": 80,
+            "2_2": 70,
+            "2_3": 66.66666666666667
+        },
         "userId": 3,
         "email": "q@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
@@ -28,7 +53,10 @@
         "role": "student",
         "certificates": [],
         "quizAttempts": {},
-        "enrolledCourses": [],
+        "enrolledCourses": [{
+            "completedLessons": [],
+            "courseId": 2
+        }],
         "quizScores": {},
         "userId": 5,
         "email": "y@gmail.com",
@@ -41,5 +69,13 @@
         "email": "a@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
         "username": "a"
+    },
+    {
+        "role": "instructor",
+        "createdCourses": [12],
+        "userId": 19,
+        "email": "ni@gmail.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "ni"
     }
 ]

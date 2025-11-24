@@ -27,6 +27,7 @@ public class StudentDashboard extends javax.swing.JPanel {
     private DefaultTableModel availableModel;
     private DefaultTableModel enrolledModel;
     private DefaultTableModel lessonsModel;
+    private DefaultTableModel certificatesModel;
     private int selectedCourseId = -1; 
     private String selectedCourseName = ""; 
     
@@ -37,9 +38,11 @@ public class StudentDashboard extends javax.swing.JPanel {
         availableModel = (DefaultTableModel) availableCourseTable.getModel();
         enrolledModel = (DefaultTableModel) enrolledCoursesTable.getModel();
         lessonsModel = (DefaultTableModel) lessonTable.getModel();
+        certificatesModel = (DefaultTableModel) certificatesTable.getModel();
         
         loadAvailableCourses();
         loadEnrolledCourses();
+        loadCertificates();
     }
 
     /**
@@ -307,7 +310,7 @@ public class StudentDashboard extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadAvailableCourses() {
+     private void loadAvailableCourses() {
         availableModel.setRowCount(0);
         ArrayList<Course> approvedCourses = studentService.gerApprovedCourses();
         if (approvedCourses != null) {
@@ -333,6 +336,11 @@ public class StudentDashboard extends javax.swing.JPanel {
                 CourseService courseService = new CourseService(course);
                 int completed = studentService.getCompletedLessonsCount(course.getCourseId());
                 int total = course.getLessons().size();
+                
+                if (completed == total && total > 0) {
+                    checkAndGenerateCertificate(course);
+                }
+                
                 enrolledModel.addRow(new Object[]{
                     course.getCourseId(),
                     course.getTitle(),
@@ -361,23 +369,64 @@ public class StudentDashboard extends javax.swing.JPanel {
             }
         }
     }
-    
-    private void accesslessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accesslessonsActionPerformed
-    int selectedRow = enrolledCoursesTable.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a course first.");
-        return;
+
+    private void loadCertificates() {
+        certificatesModel.setRowCount(0);
+        ArrayList<Certificate> certificates = studentService.getCertificates();
+        if (certificates != null) {
+            for (int i = 0; i < certificates.size(); i++) {
+                Certificate cert = certificates.get(i);
+                Course course = studentService.getCourse(cert.getCourseId());
+                String courseName = (course != null) ? course.getTitle() : "Unknown Course";
+                certificatesModel.addRow(new Object[]{
+                    cert.getCertificateId(),
+                    courseName,
+                    cert.getIssueDate()
+                });
+            }
+        }
     }
 
-    selectedCourseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
-    selectedCourseName = (String) enrolledModel.getValueAt(selectedRow, 1);
-    loadLessonsForCourse(selectedCourseId);
-    
-    jLabel3.setText("Lessons - " + selectedCourseName);                         
+    private void checkAndGenerateCertificate(Course course) {
+        ArrayList<Certificate> certificates = studentService.getCertificates();
+        boolean hasCertificate = false;
+        
+        for (int i = 0; i < certificates.size(); i++) {
+            Certificate cert = certificates.get(i);
+            if (cert.getCourseId() == course.getCourseId()) {
+                hasCertificate = true;
+                break;
+            }
+        }
+        
+        if (!hasCertificate) {
+            boolean generated = studentService.generateCertificate(course);
+            if (generated) {
+                JOptionPane.showMessageDialog(this, 
+                    "Congratulations! You've completed the course: " + course.getTitle() + 
+                    "\nA certificate has been generated.", 
+                    "Course Completed", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                loadCertificates();
+            }
+        }
+    }
+    private void accesslessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accesslessonsActionPerformed
+        int selectedRow = enrolledCoursesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
+
+        selectedCourseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
+        selectedCourseName = (String) enrolledModel.getValueAt(selectedRow, 1);
+        loadLessonsForCourse(selectedCourseId);
+        
+        jLabel3.setText("Lessons - " + selectedCourseName);                                                     
     }//GEN-LAST:event_accesslessonsActionPerformed
 
     private void enrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enrollActionPerformed
-         int selectedRow = availableCourseTable.getSelectedRow();
+        int selectedRow = availableCourseTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a course to enroll.");
             return;
@@ -396,56 +445,75 @@ public class StudentDashboard extends javax.swing.JPanel {
     }//GEN-LAST:event_enrollActionPerformed
 
     private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
-    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-    currentFrame.dispose();
-    
-    JFrame homeFrame = new JFrame("Skill-Forge");
-    homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    homeFrame.getContentPane().add(new Home());
-    homeFrame.pack();
-    homeFrame.setLocationRelativeTo(null);
+        JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        currentFrame.dispose();
+        
+        JFrame homeFrame = new JFrame("Skill-Forge");
+        homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        homeFrame.getContentPane().add(new Home());
+        homeFrame.pack();
+        homeFrame.setLocationRelativeTo(null);
     homeFrame.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
 
     private void getQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getQuizButtonActionPerformed
-    int selectedRow = enrolledCoursesTable.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a course first.");
-        return;
-    }
+        int selectedRow = enrolledCoursesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
 
-    int courseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
-    
-    int selectedLessonRow = lessonTable.getSelectedRow();
-    if (selectedLessonRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
-        return;
-    }
+        int courseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
+        
+        int selectedLessonRow = lessonTable.getSelectedRow();
+        if (selectedLessonRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a lesson first.");
+            return;
+        }
 
-    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
+        Object lessonIdObj = lessonsModel.getValueAt(selectedLessonRow, 0);
+        int lessonId;
+        
+        if (lessonIdObj instanceof Integer) {
+            lessonId = (Integer) lessonIdObj;
+        } else if (lessonIdObj instanceof String) {
+            try {
+                lessonId = Integer.parseInt((String) lessonIdObj);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid lesson ID format!");
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Unexpected data type for lesson ID!");
+            return;
+        }
 
-    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-    currentFrame.getContentPane().removeAll();
-    currentFrame.getContentPane().add(new QuizPanel(studentService.getStudent(), courseId, lessonId, this));
-    currentFrame.revalidate();
-    currentFrame.repaint();
+        JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        currentFrame.getContentPane().removeAll();
+        
+        currentFrame.getContentPane().add(new QuizFrame(studentService.getStudent(), courseId, lessonId));
+        currentFrame.revalidate();
+        currentFrame.repaint();
     }//GEN-LAST:event_getQuizButtonActionPerformed
 
     private void viewAndDownloadCertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAndDownloadCertButtonActionPerformed
-        
-    int selectedRow = certificatesTable.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a certificate first.");
-        return;
-    }
+         int selectedRow = certificatesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a certificate first.");
+            return;
+        }
 
-    String certId = (String) certificatesTable.getValueAt(selectedRow, 0);
-    Certificate cert = studentService.getCertificateById(certId);
+        String certId = (String) certificatesModel.getValueAt(selectedRow, 0);
+        Certificate cert = studentService.getCertificateById(certId);
 
-    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-    currentFrame.getContentPane().removeAll();
-    currentFrame.getContentPane().add(new CertificateView(cert));
-    currentFrame.revalidate();
-    currentFrame.repaint();
+        if (cert != null) {
+            JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            currentFrame.getContentPane().removeAll();
+            currentFrame.getContentPane().add(new CertificateView(cert));
+            currentFrame.revalidate();
+            currentFrame.repaint();
+        } else {
+            JOptionPane.showMessageDialog(this, "Certificate not found!");
+        }
     }//GEN-LAST:event_viewAndDownloadCertButtonActionPerformed
 
 
