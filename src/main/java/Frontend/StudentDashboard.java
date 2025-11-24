@@ -62,14 +62,13 @@ public class StudentDashboard extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         lessonTable = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        incompLessonButton = new javax.swing.JButton();
-        compLessonButton = new javax.swing.JButton();
         btnback = new javax.swing.JButton();
         getQuizButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         certificatesTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         viewAndDownloadCertButton = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setName(""); // NOI18N
 
@@ -167,20 +166,6 @@ public class StudentDashboard extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel3.setText("Certificates");
 
-        incompLessonButton.setText("Mark as incomplete");
-        incompLessonButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                incompLessonButtonActionPerformed(evt);
-            }
-        });
-
-        compLessonButton.setText("Mark as complete");
-        compLessonButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                compLessonButtonActionPerformed(evt);
-            }
-        });
-
         btnback.setBackground(new java.awt.Color(255, 0, 0));
         btnback.setForeground(new java.awt.Color(255, 255, 255));
         btnback.setText("Back");
@@ -220,6 +205,8 @@ public class StudentDashboard extends javax.swing.JPanel {
             }
         });
 
+        jLabel5.setText("Select lesson first:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -229,9 +216,7 @@ public class StudentDashboard extends javax.swing.JPanel {
                 .addComponent(enroll)
                 .addGap(326, 326, 326)
                 .addComponent(accesslessons)
-                .addGap(281, 281, 281)
-                .addComponent(getQuizButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 821, Short.MAX_VALUE)
                 .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
@@ -246,13 +231,16 @@ public class StudentDashboard extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(compLessonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(incompLessonButton))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(84, 84, 84)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(getQuizButton)
+                                .addGap(45, 45, 45))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(87, 87, 87)
                         .addComponent(jLabel1)))
@@ -262,7 +250,7 @@ public class StudentDashboard extends javax.swing.JPanel {
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addGap(37, 37, 37))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 70, Short.MAX_VALUE)
+                        .addGap(0, 91, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel3)
@@ -272,7 +260,7 @@ public class StudentDashboard extends javax.swing.JPanel {
                                 .addGap(122, 122, 122))))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(1007, Short.MAX_VALUE)
+                    .addContainerGap(1026, Short.MAX_VALUE)
                     .addComponent(jLabel4)
                     .addGap(444, 444, 444)))
         );
@@ -291,9 +279,9 @@ public class StudentDashboard extends javax.swing.JPanel {
                                     .addComponent(jScrollPane4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(incompLessonButton)
-                                    .addComponent(compLessonButton)
-                                    .addComponent(viewAndDownloadCertButton)))
+                                    .addComponent(viewAndDownloadCertButton)
+                                    .addComponent(getQuizButton)
+                                    .addComponent(jLabel5)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel2)
@@ -305,8 +293,7 @@ public class StudentDashboard extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(enroll)
-                            .addComponent(accesslessons)
-                            .addComponent(getQuizButton))
+                            .addComponent(accesslessons))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -407,55 +394,6 @@ public class StudentDashboard extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_enrollActionPerformed
 
-    private void incompLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_incompLessonButtonActionPerformed
-    if (selectedCourseId == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
-        return;
-    }
-    
-    int selectedLessonRow = lessonTable.getSelectedRow();
-    if (selectedLessonRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
-        return;
-    }
-
-    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
-
-    boolean success = studentService.unmarkLesson(selectedCourseId, lessonId);
-    if (success) {
-        loadLessonsForCourse(selectedCourseId);
-        loadEnrolledCourses();
-        JOptionPane.showMessageDialog(this, "Lesson marked as incomplete.");
-    } else {
-        JOptionPane.showMessageDialog(this, "Failed to mark lesson as incomplete.");
-    }
-
-    }//GEN-LAST:event_incompLessonButtonActionPerformed
-
-    private void compLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compLessonButtonActionPerformed
-    if (selectedCourseId == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
-        return;
-    }
-    
-    int selectedLessonRow = lessonTable.getSelectedRow();
-    if (selectedLessonRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
-        return;
-    }
-
-    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
-
-    boolean success = studentService.completeLesson(selectedCourseId, lessonId);
-    if (success) {
-        loadLessonsForCourse(selectedCourseId);
-        loadEnrolledCourses();
-        JOptionPane.showMessageDialog(this, "Lesson marked as complete.");
-    } else {
-        JOptionPane.showMessageDialog(this, "Failed to mark lesson as complete.");
-    }       
-    }//GEN-LAST:event_compLessonButtonActionPerformed
-
     private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
     JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
     currentFrame.dispose();
@@ -476,11 +414,23 @@ public class StudentDashboard extends javax.swing.JPanel {
     }
 
     int courseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
+    if (selectedCourseId == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
+        return;
+    }
+    
+    int selectedLessonRow = lessonTable.getSelectedRow();
+    if (selectedLessonRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
+        return;
+    }
+
+    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
     Course selectedCourse = studentService.getCourse(courseId);
 
     JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
     currentFrame.getContentPane().removeAll();
-    currentFrame.getContentPane().add(new Quiz(studentService.getStudent(), selectedCourse)); //pola change name and pass what Quiz panel needs
+    currentFrame.getContentPane().add(new QuizPanel(studentService.getStudent(),courseId, lessonId, this)); //pola change name and pass what Quiz panel needs
     currentFrame.revalidate();
     currentFrame.repaint();
     }//GEN-LAST:event_getQuizButtonActionPerformed
@@ -493,7 +443,7 @@ public class StudentDashboard extends javax.swing.JPanel {
         return;
     }
 
-    int certId = (Integer) certificatesTable.getValueAt(selectedRow, 0);
+    String certId = (String) certificatesTable.getValueAt(selectedRow, 0);
     Certificate cert = studentService.getCertificateById(certId); //method to be done by obra///////////------------------
 
     JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -509,15 +459,14 @@ public class StudentDashboard extends javax.swing.JPanel {
     private javax.swing.JTable availableCourseTable;
     private javax.swing.JButton btnback;
     private javax.swing.JTable certificatesTable;
-    private javax.swing.JButton compLessonButton;
     private javax.swing.JButton enroll;
     private javax.swing.JTable enrolledCoursesTable;
     private javax.swing.JButton getQuizButton;
-    private javax.swing.JButton incompLessonButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
