@@ -20,6 +20,10 @@ public class StudentService {
         this.student = student;
     }
 
+    public Student getStudent(){
+        return student;
+    }
+    
     public ArrayList<Course> getAllCourses() {
         return courses.getAllCourses();
     }
@@ -105,7 +109,7 @@ public class StudentService {
         int currentLessonIndex = -1;
         
         for (int i = 0; i < lessons.size(); i++) {
-            if (lessons.get(i).getLessonId() == lessonId) {
+            if (lessons.get(i).getLessonId() == lessonId && lessons.hasQuiz()) {
                 currentLessonIndex = i;
                 break;
             }

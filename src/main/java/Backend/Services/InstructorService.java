@@ -5,6 +5,7 @@ import Backend.Database.UserDatabase;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
+import Backend.Models.Question;
 import Backend.Models.Quiz;
 import java.util.ArrayList;
 
@@ -100,10 +101,59 @@ public class InstructorService {
         return courses.deleteLesson(c.getCourseId(), lessonId);
     }
 
+    public boolean addQuizToLesson(int courseId, int lessonId, int quizId,int passingScore,ArrayList<Question> questions){
+        Course course = getCourseById(courseId);
+        if(course == null){
+            return false;
+        }
+        
+         Lesson lesson = course.getLessonById(lessonId);
+        if (lesson == null) {
+            return false;
+        }
+
+         Quiz quiz = new Quiz(quizId, passingScore);
+        for (Question question : questions) {
+            quiz.addQuestion(question);
+        }
+
+        lesson.addQuiz(quiz);
+        
+        boolean updateStatus = courses.updateLesson(courseId, lesson);
+        return updateStatus;
+    }
+    
+    public boolean updateQuiz(int courseId, int lessonId, int quizId,int passingScore,ArrayList<Question> questions){
+        Course course = getCourseById(courseId);
+        if(course == null){
+            return false;
+        }
+        
+         Lesson lesson = course.getLessonById(lessonId);
+        if (lesson == null) {
+            return false;
+        }
+        
+        lesson.setQuiz(quiz);
+        boolean updateStatus = courses.updateLesson(courseId, lesson);
+        return updateStatus;
+    }
+    
     public ArrayList<Lesson> getLessons(Course c) {
         return c.getLessons();
     }
 
+    public ArrayList<Lesson> getLessonsWithQuizzes(Course c){
+        ArrayList<Lesson> totalLessons = c.getLessons();
+        ArrayList<Lesson> lessonsWithQuizzes = new ArrayList<Lesson>();
+        for (int i  = 0; i < totalLessons.size(); i++){
+            if(totalLessons.get(i).hasQuiz()){
+                lessonsWithQuizzes.add(totalLessons.get(i));
+            }
+        }
+        return lessonsWithQuizzes;
+    }
+    
     public ArrayList<Integer> getEnrolledStudentsIds(Course c) {
         return c.getStudentIds();
     }
