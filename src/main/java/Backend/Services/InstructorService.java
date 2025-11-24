@@ -134,6 +134,12 @@ public class InstructorService {
             return false;
         }
         
+        Quiz quiz = new Quiz(quizId, passingScore);
+        for (Question question : questions) {
+            quiz.addQuestion(question);
+        }
+       
+        
         lesson.setQuiz(quiz);
         boolean updateStatus = courses.updateLesson(courseId, lesson);
         return updateStatus;

@@ -109,7 +109,7 @@ public class StudentService {
         int currentLessonIndex = -1;
         
         for (int i = 0; i < lessons.size(); i++) {
-            if (lessons.get(i).getLessonId() == lessonId && lessons.hasQuiz()) {
+            if (lessons.get(i).getLessonId() == lessonId && lessons.get(i).hasQuiz()) {
                 currentLessonIndex = i;
                 break;
             }
