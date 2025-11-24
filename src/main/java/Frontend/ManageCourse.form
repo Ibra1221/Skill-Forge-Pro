@@ -254,7 +254,7 @@
                 <Column editable="true" title="title" type="java.lang.String"/>
                 <Column editable="true" title="description" type="java.lang.String"/>
                 <Column editable="true" title="instructorId" type="java.lang.Integer"/>
-                <Column editable="true" title="Approval Status" type="java.lang.String"/>
+                <Column editable="false" title="Approval Status" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

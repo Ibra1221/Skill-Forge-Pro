@@ -195,7 +195,15 @@ public class StudentDashboard extends javax.swing.JPanel {
             new String [] {
                 "Certificate ID", "Course ID", "Issue Date"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane4.setViewportView(certificatesTable);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
