@@ -5,6 +5,10 @@
 package Frontend;
 
 import javax.swing.JFrame;
+import Backend.Models.Course;
+import Backend.Services.AdminService;
+import Backend.Services.CourseService;
+import java.util.ArrayList;
 
 /**
  *
@@ -146,12 +150,12 @@ private void loadPendingCourses() {
     javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) availableCourseTable.getModel();
     model.setRowCount(0);
     
-    Backend.Services.AdminService adminService = new Backend.Services.AdminService();
-    java.util.ArrayList<Backend.Models.Course> pendingCourses = adminService.getPendingCourses();
+    AdminService adminService = new AdminService();
+    ArrayList<Course> pendingCourses = adminService.getPendingCourses();
     
     for (int i = 0; i < pendingCourses.size(); i++) {
-        Backend.Models.Course course = pendingCourses.get(i);
-        Backend.Services.CourseService courseService = new Backend.Services.CourseService(course);
+        Course course = pendingCourses.get(i);
+        CourseService courseService = new CourseService(course);
         model.addRow(new Object[]{
             course.getCourseId(),
             course.getTitle(),
@@ -169,7 +173,7 @@ private void loadPendingCourses() {
 
         int courseId = (Integer) availableCourseTable.getValueAt(selectedRow, 0);
 
-        Backend.Services.AdminService adminService = new Backend.Services.AdminService();
+        AdminService adminService = new AdminService();
         boolean success = adminService.approveCourse(courseId, adminId);
 
         if (success) {
@@ -194,7 +198,7 @@ private void loadPendingCourses() {
 
         int courseId = (Integer) availableCourseTable.getValueAt(selectedRow, 0);
 
-        Backend.Services.AdminService adminService = new Backend.Services.AdminService();
+        AdminService adminService = new AdminService();
         boolean success = adminService.rejectCourse(courseId, adminId, reason);
 
         if (success) {
